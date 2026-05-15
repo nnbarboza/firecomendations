@@ -1,9 +1,9 @@
 {
-  "name": "BROmendations",
-  "short_name": "BROmendations",
-  "description": "Recomendaciones culturales en familia",
-  "start_url": "/bromendations/",
-  "scope": "/bromendations/",
+  "name": "FIREcomendations",
+  "short_name": "FIREcomendations",
+  "description": "Recomendaciones culturales entre amigos",
+  "start_url": "/firecomendations/",
+  "scope": "/firecomendations/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#FFF7ED",
@@ -11,13 +11,13 @@
   "lang": "es",
   "icons": [
     {
-      "src": "/bromendations/img/icon-192.png",
+      "src": "/firecomendations/img/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/bromendations/img/icon-512.png",
+      "src": "/firecomendations/img/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
