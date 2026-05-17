@@ -1,4 +1,4 @@
-/* BROmendations Service Worker
+/* firecomendations Service Worker
  * Estrategia:
  *  - HTML/JS/CSS: network-first (siempre intenta lo último; si falla, usa caché)
  *  - Imágenes locales (img/...): cache-first (no se descargan 100 veces)
@@ -8,15 +8,15 @@
  * El cliente recibe un 'controllerchange' y muestra el toast de "nueva versión".
  */
 
-const CACHE_VERSION = 'bromendations-v2.1.1';
+const CACHE_VERSION = 'firecomendations-v0.1';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const IMAGES_CACHE = `${CACHE_VERSION}-images`;
 
 /* En 'install' precacheamos solo lo mínimo para que la app abra offline */
 const PRECACHE_URLS = [
-  '/bromendations/',
-  '/bromendations/index.html',
-  '/bromendations/manifest.json',
+  '/firecomendations/',
+  '/firecomendations/index.html',
+  '/firecomendations/manifest.json',
 ];
 
 self.addEventListener('install', (event) => {
@@ -43,13 +43,13 @@ self.addEventListener('activate', (event) => {
 
 /* Helper: ¿es una imagen local del repo? */
 function isLocalImage(url) {
-  return url.pathname.startsWith('/bromendations/img/');
+  return url.pathname.startsWith('/firecomendations/img/');
 }
 
 /* Helper: ¿es nuestra app (HTML/JS/CSS, no externa)? */
 function isAppShell(url) {
   if (url.origin !== self.location.origin) return false;
-  if (!url.pathname.startsWith('/bromendations/')) return false;
+  if (!url.pathname.startsWith('/firecomendations/')) return false;
   // Excluir imágenes
   if (isLocalImage(url)) return false;
   return true;
@@ -92,7 +92,7 @@ self.addEventListener('fetch', (event) => {
           caches.open(STATIC_CACHE).then((cache) => cache.put(req, clone));
         }
         return res;
-      }).catch(() => caches.match(req).then((cached) => cached || caches.match('/bromendations/index.html')))
+      }).catch(() => caches.match(req).then((cached) => cached || caches.match('/firecomendations/index.html')))
     );
     return;
   }
