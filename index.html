@@ -27,14 +27,14 @@
       --c-peliculas: #FF8A80;
       --c-series:    #6BA4FF;
       --c-musica:    #B99AE6;
-      --c-libros:    #FFC857;
+      --c-restauracion: #FFC857;
       --c-action:    #2E8B6C;
       --c-danger:    #C2453B;
 
       --c-peliculas-soft: #FFD9D4;
       --c-series-soft:    #D6E4FF;
       --c-musica-soft:    #E8DEFA;
-      --c-libros-soft:    #FFEAB3;
+      --c-restauracion-soft: #FFEAB3;
 
       --bg:        #FFF7ED;
       --surface:   #FFFFFF;
@@ -131,7 +131,7 @@
     .cat-card.peliculas { background: var(--c-peliculas-soft); }
     .cat-card.series    { background: var(--c-series-soft); }
     .cat-card.musica    { background: var(--c-musica-soft); }
-    .cat-card.libros    { background: var(--c-libros-soft); }
+    .cat-card.restauracion { background: var(--c-restauracion-soft); }
 
     .cat-dot {
       position: absolute;
@@ -159,7 +159,7 @@
     .cat-card.peliculas .cat-icon svg { color: #C2453B; }
     .cat-card.series .cat-icon svg    { color: #2A5FB8; }
     .cat-card.musica .cat-icon svg    { color: #6B4FAE; }
-    .cat-card.libros .cat-icon svg    { color: #B8841A; }
+    .cat-card.restauracion .cat-icon svg { color: #B8841A; }
     .cat-card-text { flex: 1; min-width: 0; }
     .cat-name {
       font-family: var(--font-display); font-weight: 700;
@@ -169,7 +169,7 @@
     .cat-card.peliculas .cat-name { color: #4A1D19; }
     .cat-card.series .cat-name    { color: #14306B; }
     .cat-card.musica .cat-name    { color: #322657; }
-    .cat-card.libros .cat-name    { color: #5C3E0A; }
+    .cat-card.restauracion .cat-name { color: #5C3E0A; }
     .cat-count {
       font-size: 12px; font-weight: 500; opacity: 0.75;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -209,7 +209,7 @@
     .cat-card.peliculas .cat-arrow svg { color: var(--c-peliculas); }
     .cat-card.series .cat-arrow svg    { color: var(--c-series); }
     .cat-card.musica .cat-arrow svg    { color: var(--c-musica); }
-    .cat-card.libros .cat-arrow svg    { color: #D4A21F; }
+    .cat-card.restauracion .cat-arrow svg { color: #D4A21F; }
 
     .section-head {
       display: flex; align-items: center; justify-content: space-between;
@@ -220,7 +220,7 @@
       font-size: 22px; margin: 0;
       display: flex; align-items: center; gap: var(--s-2);
     }
-    .section-head h2 svg { width: 22px; height: 22px; color: var(--c-libros); }
+    .section-head h2 svg { width: 22px; height: 22px; color: var(--c-restauracion); }
     .section-head a {
       color: var(--c-action); font-weight: 600; font-size: 14px;
       display: inline-flex; align-items: center; gap: 4px;
@@ -274,10 +274,10 @@
     .badge.peliculas { background: var(--c-peliculas-soft); color: #C2453B; }
     .badge.series    { background: var(--c-series-soft);    color: #2A5FB8; }
     .badge.musica    { background: var(--c-musica-soft);    color: #6B4FAE; }
-    .badge.libros    { background: var(--c-libros-soft);    color: #B8841A; }
+    .badge.restauracion { background: var(--c-restauracion-soft); color: #B8841A; }
 
     .rec-rating { display: flex; gap: 2px; }
-    .rec-rating svg { width: 14px; height: 14px; color: var(--c-libros); }
+    .rec-rating svg { width: 14px; height: 14px; color: var(--c-restauracion); }
     .rec-rating svg.empty { color: var(--gray-100); }
 
     .rec-author {
@@ -516,7 +516,7 @@
     .cat-pick-btn[data-cat="peliculas"][aria-pressed="true"] { background: var(--c-peliculas-soft); border-color: var(--c-peliculas); color: #4A1D19; }
     .cat-pick-btn[data-cat="series"][aria-pressed="true"]    { background: var(--c-series-soft); border-color: var(--c-series); color: #14306B; }
     .cat-pick-btn[data-cat="musica"][aria-pressed="true"]    { background: var(--c-musica-soft); border-color: var(--c-musica); color: #322657; }
-    .cat-pick-btn[data-cat="libros"][aria-pressed="true"]    { background: var(--c-libros-soft); border-color: var(--c-libros); color: #5C3E0A; }
+    .cat-pick-btn[data-cat="restauracion"][aria-pressed="true"] { background: var(--c-restauracion-soft); border-color: var(--c-restauracion); color: #5C3E0A; }
 
     .subcat-row { display: flex; flex-wrap: wrap; gap: var(--s-2); }
     .subcat-btn {
@@ -624,7 +624,7 @@
     }
     .star-btn { padding: 4px; }
     .star-btn svg { width: 32px; height: 32px; color: var(--gray-100); transition: color 0.15s; }
-    .star-btn[data-on="true"] svg { color: var(--c-libros); }
+    .star-btn[data-on="true"] svg { color: var(--c-restauracion); }
 
     /* Reproductor de trailer YouTube */
     .trailer-wrap {
@@ -1070,7 +1070,7 @@
 
   <div class="splash" id="splash">
     <div class="splash-content">
-      <h1><span class="accent">BROmendations</span></h1>
+      <h1><span class="accent">FIREcomendations</span></h1>
       <div class="splash-spinner"></div>
     </div>
   </div>
@@ -1103,7 +1103,7 @@
 
   <div class="user-picker" id="userPicker">
     <div class="user-picker-inner">
-      <h1><span class="accent">BROmendations</span></h1>
+      <h1><span class="accent">FIREcomendations</span></h1>
       <p>¿Quién eres?</p>
       <div class="user-grid" id="userGrid"></div>
     </div>
@@ -1118,7 +1118,7 @@
           <span class="bell-dot" id="bellDot" style="display:none;">0</span>
         </a>
         <h1>¡Hola <span id="userName">...</span>!</h1>
-        <p>No todo tiene un límite.<br>Descubrí y recomendá a la flia.</p>
+        <p>No todo tiene un límite.<br>Descubrí y recomendá entre amigos.</p>
       </header>
 
       <div class="categories">
@@ -1158,15 +1158,15 @@
           <div class="cat-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
         </a>
 
-        <a href="#/categoria/libros" class="cat-card libros">
-          <span class="cat-dot" id="cat-dot-libros" style="display:none;">0</span>
+        <a href="#/categoria/restauracion" class="cat-card restauracion">
+          <span class="cat-dot" id="cat-dot-restauracion" style="display:none;">0</span>
           <div class="cat-card-head">
-            <div class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg></div>
+            <div class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7a3 3 0 0 0 3 3v10"/><path d="M9 2v10"/><path d="M6 2v6"/><path d="M18 2c-2 0-3 2-3 5s1 5 3 5v10"/></svg></div>
             <div class="cat-card-text">
-              <div class="cat-name">Libros</div>
+              <div class="cat-name">Restauración</div>
             </div>
           </div>
-          <div class="cat-art"><picture><source srcset="img/categorias/libros.webp" type="image/webp"><img src="img/categorias/libros.png" alt="" onerror="this.parentNode.outerHTML='<span class=\'emoji-fallback\'>📚</span>'"></picture></div>
+          <div class="cat-art"><picture><source srcset="img/categorias/restauracion.webp" type="image/webp"><img src="img/categorias/restauracion.png" alt="" onerror="this.parentNode.outerHTML='<span class=\'emoji-fallback\'>🍴</span>'"></picture></div>
           <div class="cat-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
         </a>
       </div>
@@ -1203,7 +1203,7 @@
             <button class="cat-pick-btn" data-cat="peliculas" aria-pressed="false"><span class="cat-emoji">🎬</span> Película</button>
             <button class="cat-pick-btn" data-cat="series" aria-pressed="false"><span class="cat-emoji">📺</span> Serie</button>
             <button class="cat-pick-btn" data-cat="musica" aria-pressed="false"><span class="cat-emoji">🎧</span> Música</button>
-            <button class="cat-pick-btn" data-cat="libros" aria-pressed="false"><span class="cat-emoji">📚</span> Libro</button>
+            <button class="cat-pick-btn" data-cat="restauracion" aria-pressed="false"><span class="cat-emoji">🍴</span> Restauración</button>
           </div>
         </div>
 
@@ -1294,12 +1294,12 @@
         <picture>
           <source srcset="img/familia.avif" type="image/avif">
           <source srcset="img/familia.webp" type="image/webp">
-          <img id="familiaHeroImg" src="img/familia.png" alt="" data-fallback="🏡" data-fallback-class="hero-placeholder">
+          <img id="familiaHeroImg" src="img/familia.png" alt="" data-fallback="🤘" data-fallback-class="hero-placeholder">
         </picture>
       </div>
       <div id="bromendatorsList"></div>
       <footer class="familia-credits">
-        <p>BROmendations© 2026 · v<span id="familiaVersion">2.0</span></p>
+        <p>FIREcomendations© 2026 · v<span id="familiaVersion">0.1</span></p>
         <p>Diseñada y desarrollada en Barcelona por Nico con 🔥</p>
       </footer>
     </section>
@@ -1390,20 +1390,20 @@
 
   <script>
     /* ========== CONFIG ========== */
-    const APP_VERSION = '2.1';
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwqd4g2qm4hiumrob54_eGgVd1N7YJAmIgXANkin6X91-VjWhlUWf0CnznHbd9zdrAm/exec';
+    const APP_VERSION = '0.1';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzoW8tEDotBHSg9c6e-5rbUePYQR0c3xuIf-Efh4iGIQQFWbv2nV3egIGcsjqeFh3WDew/exec';
 
     const CATEGORIES = {
-      peliculas: { nombre: 'Películas', singular: 'Película', emoji: '🍿', color: 'peliculas' },
-      series:    { nombre: 'Series',    singular: 'Serie',    emoji: '📺', color: 'series' },
-      musica:    { nombre: 'Música',    singular: 'Música',   emoji: '🎧', color: 'musica' },
-      libros:    { nombre: 'Libros',    singular: 'Libro',    emoji: '📚', color: 'libros' },
+      peliculas:    { nombre: 'Películas',    singular: 'Película',    emoji: '🍿', color: 'peliculas' },
+      series:       { nombre: 'Series',       singular: 'Serie',       emoji: '📺', color: 'series' },
+      musica:       { nombre: 'Música',       singular: 'Música',      emoji: '🎧', color: 'musica' },
+      restauracion: { nombre: 'Restauración', singular: 'Restauración', emoji: '🍴', color: 'restauracion' },
     };
 
     /* ========== STATE ========== */
     const state = {
       currentUser: null,
-      data: { usuarios: [], recomendaciones: [], valoraciones: [], reacciones: [], consumido: [] },
+      data: { usuarios: [], recomendaciones: [], valoraciones: [], reacciones: [], consumido: [], repertorios: [], repertoriosItems: [] },
       formNew: { categoria: null, subcategoria: null },
     };
 
@@ -1498,20 +1498,20 @@
     }
     function getCreadorLabel(categoria) {
       switch (categoria) {
-        case 'peliculas': return 'Director';
-        case 'series':    return 'Creador';
-        case 'musica':    return 'Artista';
-        case 'libros':    return 'Autor';
-        default:          return 'Creador';
+        case 'peliculas':    return 'Director';
+        case 'series':       return 'Creador';
+        case 'musica':       return 'Artista';
+        case 'restauracion': return 'Dirección';
+        default:             return 'Creador';
       }
     }
     function getSobreLabel(categoria) {
       switch (categoria) {
-        case 'peliculas': return 'la película';
-        case 'series':    return 'la serie';
-        case 'musica':    return 'la música';
-        case 'libros':    return 'el libro';
-        default:          return 'esta obra';
+        case 'peliculas':    return 'la película';
+        case 'series':       return 'la serie';
+        case 'musica':       return 'la música';
+        case 'restauracion': return 'este sitio';
+        default:             return 'esta obra';
       }
     }
     function formatRT(val) {
@@ -2184,11 +2184,11 @@
 
     function categoryFilterHTML(activeFilter, idPrefix) {
       const cats = [
-        { key: 'all',       label: 'Todas',     emoji: '✨' },
-        { key: 'peliculas', label: 'Películas', emoji: '🍿' },
-        { key: 'series',    label: 'Series',    emoji: '📺' },
-        { key: 'musica',    label: 'Música',    emoji: '🎧' },
-        { key: 'libros',    label: 'Libros',    emoji: '📚' },
+        { key: 'all',          label: 'Todas',        emoji: '✨' },
+        { key: 'peliculas',    label: 'Películas',    emoji: '🍿' },
+        { key: 'series',       label: 'Series',       emoji: '📺' },
+        { key: 'musica',       label: 'Música',       emoji: '🎧' },
+        { key: 'restauracion', label: 'Restauración', emoji: '🍴' },
       ];
       return `
         <div class="cat-filter" id="${idPrefix}-filter">
@@ -2340,7 +2340,7 @@
         const a = document.createElement('a');
         const stamp = new Date().toISOString().slice(0, 10);
         a.href = url;
-        a.download = `bromendations_backup_${stamp}.json`;
+        a.download = `firecomendations_backup_${stamp}.json`;
         document.body.appendChild(a);
         a.click();
         setTimeout(() => {
@@ -2411,26 +2411,67 @@
       submit.textContent = 'Compartir recomendación';
     }
 
-    function setupForm() {
-      document.querySelectorAll('#catPicker .cat-pick-btn').forEach(btn => {
+    /* Subcategorías por categoría. Las que NO están aquí no muestran subcat-picker. */
+    const SUBCATEGORIES = {
+      musica: [
+        { key: 'cancion',    label: 'Canción' },
+        { key: 'album',      label: 'Álbum' },
+        { key: 'artista',    label: 'Artista' },
+        { key: 'concierto',  label: 'Concierto' },
+      ],
+      restauracion: [
+        { key: 'restaurante', label: 'Restaurante' },
+        { key: 'bar',         label: 'Bar' },
+        { key: 'cafe',        label: 'Café' },
+      ],
+    };
+    
+    function renderSubcatRow(categoria) {
+      const row = document.getElementById('subcatRow');
+      if (!row) return;
+      const opts = SUBCATEGORIES[categoria];
+      if (!opts) {
+        row.innerHTML = '';
+        return;
+      }
+      row.innerHTML = opts.map(o => `<button class="subcat-btn" data-subcat="${o.key}" aria-pressed="false">${o.label}</button>`).join('');
+      // Rebind handlers porque acabamos de reemplazar el HTML
+      row.querySelectorAll('.subcat-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          document.querySelectorAll('#catPicker .cat-pick-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
-          btn.setAttribute('aria-pressed', 'true');
-          state.formNew.categoria = btn.dataset.cat;
-          document.getElementById('subcatGroup').style.display = btn.dataset.cat === 'musica' ? 'block' : 'none';
-          if (btn.dataset.cat !== 'musica') state.formNew.subcategoria = null;
-          updateCreadorField(btn.dataset.cat);
-          updateExtraFields(btn.dataset.cat, state.formNew.subcategoria);
-        });
-      });
-      document.querySelectorAll('#subcatRow .subcat-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('#subcatRow .subcat-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
+          row.querySelectorAll('.subcat-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
           btn.setAttribute('aria-pressed', 'true');
           state.formNew.subcategoria = btn.dataset.subcat;
           updateExtraFields(state.formNew.categoria, state.formNew.subcategoria);
         });
       });
+    }
+    
+    function setupForm() {
+      document.querySelectorAll('#catPicker .cat-pick-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#catPicker .cat-pick-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
+          btn.setAttribute('aria-pressed', 'true');
+          const cat = btn.dataset.cat;
+          state.formNew.categoria = cat;
+          state.formNew.subcategoria = null;
+          // Mostrar/ocultar subcat-row según si la categoría tiene subcategorías
+          const hasSubcats = !!SUBCATEGORIES[cat];
+          const subcatGroup = document.getElementById('subcatGroup');
+          subcatGroup.style.display = hasSubcats ? 'block' : 'none';
+          // Renderizar las subcategorías correctas
+          renderSubcatRow(cat);
+          // Etiqueta del subcat-group según categoría
+          const subcatLabel = subcatGroup.querySelector('.form-label');
+          if (subcatLabel) {
+            subcatLabel.textContent = cat === 'musica' ? 'Tipo de música' :
+                                      cat === 'restauracion' ? 'Tipo de sitio' :
+                                      'Tipo';
+          }
+          updateCreadorField(cat);
+          updateExtraFields(cat, state.formNew.subcategoria);
+        });
+      });
+      // Nota: los handlers de subcat-btn ahora se atan en renderSubcatRow porque el HTML cambia
       document.getElementById('submitRec').addEventListener('click', submitRec);
     }
 
@@ -2439,13 +2480,9 @@
       const label = document.getElementById('creadorLabel');
       const input = document.getElementById('recCreador');
       if (!group) return;
-      if (categoria === 'libros') {
-        group.style.display = 'block';
-        label.textContent = 'Autor/a';
-        input.placeholder = 'Ej: Gabriel García Márquez';
-      } else if (categoria === 'musica') {
-        // En música el manejo se delega a updateExtraFields
-        // (puede esconderse si subcategoria === 'artista' porque ahí ES el título)
+      // En música y restauración el manejo se delega a updateExtraFields según subcategoría
+      if (categoria === 'musica' || categoria === 'restauracion') {
+        // No tocamos aquí; updateExtraFields decide
       } else {
         group.style.display = 'none';
         input.value = '';
@@ -2479,29 +2516,37 @@
       spotifyGroup.style.display = 'none';
       videoGroup.style.display = 'none';
       
-      // CATEGORÍAS NO MÚSICA
+      // RESTAURACIÓN
+      if (categoria === 'restauracion') {
+        // Título = nombre del sitio
+        tituloLabel.textContent = 'Nombre del sitio';
+        if (subcategoria === 'bar')        tituloInput.placeholder = 'Ej: Bar Cañete';
+        else if (subcategoria === 'cafe')  tituloInput.placeholder = 'Ej: Satan\'s Coffee Corner';
+        else                                tituloInput.placeholder = 'Ej: Disfrutar';
+        // Ubicación (reusamos lugarGroup, obligatorio para que Places encuentre el sitio correcto)
+        lugarGroup.style.display = 'block';
+        if (recLugar) recLugar.placeholder = 'Ej: Barcelona, Eixample';
+        // Ocultar creador (lo rellena Places con la dirección)
+        creadorGroup.style.display = 'none';
+        creadorInput.value = '';
+        // Limpiar campos no usados
+        if (recSpotify) recSpotify.value = '';
+        if (recVideo) recVideo.value = '';
+        if (detallesInput) detallesInput.placeholder = 'Ej: para cenar de tapas';
+        return;
+      }
+      
+      // CATEGORÍAS NO MÚSICA (películas, series)
       if (categoria !== 'musica') {
-        // Placeholders y detalles según categoría
         if (categoria === 'peliculas') {
           tituloInput.placeholder = 'Ej: Anatomía de una caída';
           if (detallesInput) detallesInput.placeholder = 'Ej: 2023, Justine Triet';
         } else if (categoria === 'series') {
           tituloInput.placeholder = 'Ej: Severance';
           if (detallesInput) detallesInput.placeholder = 'Ej: Apple TV+, 2022';
-        } else if (categoria === 'libros') {
-          tituloInput.placeholder = 'Ej: Cien años de soledad';
-          if (detallesInput) detallesInput.placeholder = 'Ej: edición ilustrada, 2017';
         }
-        
-        // Libros: mostrar Autor
-        if (categoria === 'libros') {
-          creadorGroup.style.display = 'block';
-          creadorLabel.textContent = 'Autor/a';
-          creadorInput.placeholder = 'Ej: Gabriel García Márquez';
-        } else {
-          creadorGroup.style.display = 'none';
-          creadorInput.value = '';
-        }
+        creadorGroup.style.display = 'none';
+        creadorInput.value = '';
         if (recSpotify) recSpotify.value = '';
         if (recVideo) recVideo.value = '';
         if (recLugar) recLugar.value = '';
@@ -2601,11 +2646,13 @@
       }
       
       // Validación de creador obligatorio
-      if (cat === 'libros' && !creador) {
-        return toast('Escribe el autor/a para encontrar el libro', 'error');
-      }
       if (cat === 'musica' && (sub === 'cancion' || sub === 'album' || sub === 'concierto') && !creador) {
         return toast('Escribe el artista para encontrar la obra', 'error');
+      }
+      // Restauración: subcategoría + ubicación obligatorias
+      if (cat === 'restauracion') {
+        if (!sub) return toast('Elige tipo de sitio', 'error');
+        if (!lugar) return toast('Indica la ubicación del sitio (ciudad/barrio)', 'error');
       }
       
       // Validación de URLs
@@ -2749,7 +2796,7 @@
             ${r.creador ? `<p><strong>${getCreadorLabel(r.categoria)}:</strong> ${escapeHTML(r.creador)}</p>` : ''}
             ${r.año ? `<p><strong>Año:</strong> ${escapeHTML(r.año)}</p>` : ''}
             ${r.generos ? `<p><strong>Géneros:</strong> ${escapeHTML(r.generos)}</p>` : ''}
-            ${r.plataformas && r.categoria !== 'libros' && r.categoria !== 'musica' ? `<p><strong>Disponible en:</strong> ${escapeHTML(r.plataformas)}</p>` : ''}
+            ${r.plataformas && r.categoria !== 'restauracion' && r.categoria !== 'musica' ? `<p><strong>Disponible en:</strong> ${escapeHTML(r.plataformas)}</p>` : ''}
             ${r.rotten_tomatoes ? `<p><strong>${puntuacionLabel(r.rotten_tomatoes)}:</strong> ${formatRT(r.rotten_tomatoes)}</p>` : ''}
             ${showLink ? `<p style="margin-top:var(--s-3);"><a href="${r.enlace_principal}" target="_blank" rel="noopener" style="color:var(--c-action); font-weight:600;">${linkLabel(r.enlace_principal)} →</a></p>` : ''}
             ${(isMine || isAdmin()) ? `<p style="margin-top:var(--s-3); text-align:right;"><button class="btn-ghost" id="reEnrichBtn" style="font-size:12px;">🔄 Regenerar info</button></p>` : ''}
@@ -2953,12 +3000,14 @@
           let extraFieldsHTML = '';
           let tituloLabel = 'Título';
 
-          if (cat === 'libros') {
-            tituloLabel = 'Título del libro';
+          if (cat === 'restauracion') {
+            if (subcat === 'bar')        tituloLabel = 'Nombre del bar';
+            else if (subcat === 'cafe')  tituloLabel = 'Nombre del café';
+            else                          tituloLabel = 'Nombre del sitio';
             extraFieldsHTML = `
               <div class="form-group">
-                <label class="form-label" for="editCreador">Autor/a</label>
-                <input type="text" id="editCreador" class="form-input" value="${escapeHTML(r.creador || '')}" placeholder="Ej: Gabriel García Márquez">
+                <label class="form-label" for="editLugar">Ubicación</label>
+                <input type="text" id="editLugar" class="form-input" value="${escapeHTML(r.lugar || '')}" placeholder="Ej: Barcelona, Eixample">
               </div>
             `;
           } else if (cat === 'peliculas') {
@@ -3081,7 +3130,7 @@
                   comentario: newComment,
                   dirigido_a: newDest.join(','),
                 };
-                if (cat === 'libros' || (cat === 'musica' && subcat !== 'artista')) {
+                if (cat === 'musica' && subcat !== 'artista') {
                   updateParams.creador = newCreador;
                 }
                 if (cat === 'musica' && newVideo !== r.trailer_url) {
@@ -3264,7 +3313,7 @@
     /* ========== SERVICE WORKER (auto-update) ========== */
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/bromendations/sw.js', { scope: '/bromendations/' })
+        navigator.serviceWorker.register('/firecomendations/sw.js', { scope: '/firecomendations/' })
           .then((reg) => {
             // Si ya hay un SW esperando al cargar la app, mostrar toast
             if (reg.waiting && navigator.serviceWorker.controller) {
