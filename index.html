@@ -1748,7 +1748,17 @@
         const raw = localStorage.getItem(CACHE_KEY);
         if (!raw) return null;
         const p = JSON.parse(raw);
-        return (p && p.data) ? p : null;
+        if (!p || !p.data) return null;
+        // Defensa: asegurar que todos los campos existan como arrays (cache viejo puede no tenerlos)
+        const d = p.data;
+        d.usuarios         = d.usuarios         || [];
+        d.recomendaciones  = d.recomendaciones  || [];
+        d.valoraciones     = d.valoraciones     || [];
+        d.reacciones       = d.reacciones       || [];
+        d.consumido        = d.consumido        || [];
+        d.repertorios      = d.repertorios      || [];
+        d.repertoriosItems = d.repertoriosItems || [];
+        return p;
       } catch { return null; }
     }
     function saveToCache(data) {
@@ -1762,16 +1772,18 @@
       try {
         const json = await apiGet('getAll');
         state.data = {
-          usuarios:        json.usuarios || [],
-          recomendaciones: json.recomendaciones || [],
-          valoraciones:    json.valoraciones || [],
-          reacciones:      json.reacciones || [],
-          consumido:       json.consumido || [],
+          usuarios:         json.usuarios || [],
+          recomendaciones:  json.recomendaciones || [],
+          valoraciones:     json.valoraciones || [],
+          reacciones:       json.reacciones || [],
+          consumido:        json.consumido || [],
+          repertorios:      json.repertorios || [],
+          repertoriosItems: json.repertoriosItems || [],
         };
         saveToCache(state.data);
       } catch (err) {
         if (!silent) toast('Sin conexión. Mostrando datos guardados.', 'error');
-        if (!cached) state.data = { usuarios: [], recomendaciones: [], valoraciones: [], reacciones: [], consumido: [] };
+        if (!cached) state.data = { usuarios: [], recomendaciones: [], valoraciones: [], reacciones: [], consumido: [], repertorios: [], repertoriosItems: [] };
       }
     }
 
