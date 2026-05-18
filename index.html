@@ -711,6 +711,60 @@
       justify-content: flex-end;
       margin-bottom: var(--s-3);
     }
+    
+    /* Tabs de Mi perfil: Mis recomendaciones / Mis valoraciones */
+    .profile-tabs {
+      display: flex;
+      gap: 0;
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 4px;
+      margin: var(--s-3) 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .profile-tab {
+      flex: 1;
+      background: transparent;
+      border: 0;
+      padding: 10px 12px;
+      border-radius: 9px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-soft);
+      cursor: pointer;
+      transition: background .15s, color .15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .profile-tab[aria-selected="true"] {
+      background: var(--bg);
+      color: var(--ink);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+    .profile-tab-count {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      background: rgba(0,0,0,0.05);
+      padding: 1px 6px;
+      border-radius: 8px;
+      min-width: 18px;
+    }
+    .profile-tab[aria-selected="true"] .profile-tab-count {
+      background: rgba(0,0,0,0.08);
+      color: var(--ink);
+    }
+    .profile-tab-body {
+      animation: tab-fade .18s ease;
+    }
+    @keyframes tab-fade {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
     .sort-dropdown {
       flex: 0 0 auto;
       position: relative;
@@ -1118,7 +1172,7 @@
           <span class="bell-dot" id="bellDot" style="display:none;">0</span>
         </a>
         <h1>¡Hola <span id="userName">...</span>!</h1>
-        <p>No todo tiene un límite.<br>Descubrí y recomendá entre amigos.</p>
+        <p>Lindo verte por acá.<br>¿Qué mierda nos vas a recomendar hoy?</p>
       </header>
 
       <div class="categories">
@@ -1163,7 +1217,7 @@
           <div class="cat-card-head">
             <div class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7a3 3 0 0 0 3 3v10"/><path d="M9 2v10"/><path d="M6 2v6"/><path d="M18 2c-2 0-3 2-3 5s1 5 3 5v10"/></svg></div>
             <div class="cat-card-text">
-              <div class="cat-name">Restauración</div>
+              <div class="cat-name">Rincones</div>
             </div>
           </div>
           <div class="cat-art"><picture><source srcset="img/categorias/restauracion.webp" type="image/webp"><img src="img/categorias/restauracion.png" alt="" onerror="this.parentNode.outerHTML='<span class=\'emoji-fallback\'>🍴</span>'"></picture></div>
@@ -1178,15 +1232,14 @@
       <div class="recs-carousel" id="recsRow"></div>
     </section>
 
-    <section class="screen" id="screen-biblioteca">
+    <section class="screen" id="screen-repertorios">
       <header class="screen-header">
         <div class="title-block">
-          <h1>Biblioteca</h1>
-          <p>Lo que has consumido y valorado</p>
+          <h1>Repertorios</h1>
+          <p>Las canciones de la banda</p>
         </div>
-        <div class="header-actions" id="bibliotecaHeaderActions"></div>
       </header>
-      <div id="bibliotecaList"></div>
+      <div id="repertoriosContent"></div>
     </section>
 
     <section class="screen" id="screen-recomendar">
@@ -1203,7 +1256,7 @@
             <button class="cat-pick-btn" data-cat="peliculas" aria-pressed="false"><span class="cat-emoji">🎬</span> Película</button>
             <button class="cat-pick-btn" data-cat="series" aria-pressed="false"><span class="cat-emoji">📺</span> Serie</button>
             <button class="cat-pick-btn" data-cat="musica" aria-pressed="false"><span class="cat-emoji">🎧</span> Música</button>
-            <button class="cat-pick-btn" data-cat="restauracion" aria-pressed="false"><span class="cat-emoji">🍴</span> Restauración</button>
+            <button class="cat-pick-btn" data-cat="restauracion" aria-pressed="false"><span class="cat-emoji">🍴</span> Rincones</button>
           </div>
         </div>
 
@@ -1286,7 +1339,7 @@
     <section class="screen" id="screen-bromendators">
       <header class="screen-header">
         <div class="title-block">
-          <h1>Familia</h1>
+          <h1>Amigos</h1>
           <p>De Bermejo al mundo.</p>
         </div>
       </header>
@@ -1366,11 +1419,11 @@
   <nav class="nav" id="bottomNav">
     <a href="#/" class="nav-item" data-screen="home">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg>
-      La cabañita
+      Inicio
     </a>
-    <a href="#/biblioteca" class="nav-item" data-screen="biblioteca">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h3v16H4zM10 4h3v16h-3zM17 6l3 1-3 14-3-1z"/></svg>
-      Biblioteca
+    <a href="#/repertorios" class="nav-item" data-screen="repertorios">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      Repertorios
     </a>
     <div class="nav-cta">
       <a href="#/recomendar" class="nav-cta-btn" aria-label="Recomendar">
@@ -1380,7 +1433,7 @@
     </div>
     <a href="#/bromendators" class="nav-item" data-screen="bromendators">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20c0-2.5 2-5 5-5"/></svg>
-      Familia
+      Amigos
     </a>
     <a href="#/perfil" class="nav-item" data-screen="perfil">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
@@ -1397,7 +1450,7 @@
       peliculas:    { nombre: 'Películas',    singular: 'Película',    emoji: '🍿', color: 'peliculas' },
       series:       { nombre: 'Series',       singular: 'Serie',       emoji: '📺', color: 'series' },
       musica:       { nombre: 'Música',       singular: 'Música',      emoji: '🎧', color: 'musica' },
-      restauracion: { nombre: 'Restauración', singular: 'Restauración', emoji: '🍴', color: 'restauracion' },
+      restauracion: { nombre: 'Rincones', singular: 'Rincón', emoji: '🍴', color: 'restauracion' },
     };
 
     /* ========== STATE ========== */
@@ -1541,6 +1594,7 @@
         if (u.hostname.includes('openlibrary.org')) return 'Ver en Open Library';
         if (u.hostname.includes('apple.com')) return 'Ver en Apple';
         if (u.hostname.includes('youtube.com') || u.hostname.includes('youtu.be')) return 'Ver en YouTube';
+        if (u.hostname.includes('google.com') || u.hostname.includes('goo.gl')) return 'Ver en Google Maps';
         return 'Ver más';
       } catch { return 'Ver más'; }
     }
@@ -1608,29 +1662,35 @@
     /* Key de Google Maps Static API. Restricciones: solo Maps Static API + referrer https://nnbarboza.github.io/* */
     const MAPS_STATIC_KEY = 'AIzaSyA6W_KjGAq1GM0hXrVqKKkMbuuRirlGMec';
     
+    /* Base pública para los iconos de marker (deben ser https y sin auth). GitHub Pages cumple. */
+    const MARKER_BASE_URL = 'https://nnbarboza.github.io/firecomendations/img/markers';
+    
     /**
      * Convierte el `imagen_url` del Sheet en una URL renderizable.
      * 
      * Casos:
-     *  - "geo:LAT,LNG" (restauración) → URL de Google Maps Static centrado en esas coords con pin
+     *  - "geo:LAT,LNG" (restauración) → URL de Google Maps Static centrado en esas coords
+     *    con marker custom según subcategoría (restaurante/bar/cafe)
      *  - URL http normal → se devuelve tal cual
      *  - vacío o inválido → ''
-     * 
-     * Si el origen empieza con geo:, generamos un mapa estático con pin amarillo.
-     * El tamaño 400x400 es buen compromiso entre calidad retina y peso.
      */
-    function resolveImageUrl(raw) {
+    function resolveImageUrl(raw, rec) {
       if (!raw) return '';
       if (typeof raw !== 'string') return '';
       if (raw.startsWith('geo:')) {
         const coords = raw.slice(4); // "41.39,2.16"
         if (!/^[-\d.]+,[-\d.]+$/.test(coords)) return '';
+        // Elegir icono según subcategoría (fallback: restaurante)
+        const subcat = rec && rec.subcategoria ? rec.subcategoria : 'restaurante';
+        const iconUrl = `${MARKER_BASE_URL}/marker-${subcat}.png`;
+        // Static Maps requiere URL-encode del pipe (%7C)
+        const markers = `icon:${encodeURIComponent(iconUrl)}%7C${coords}`;
         const params = [
           `center=${coords}`,
           `zoom=16`,
           `size=400x400`,
           `scale=2`,
-          `markers=color:0xFFC857%7C${coords}`,
+          `markers=${markers}`,
           `key=${MAPS_STATIC_KEY}`,
         ].join('&');
         return `https://maps.googleapis.com/maps/api/staticmap?${params}`;
@@ -1654,6 +1714,7 @@
       'spotify.com', 'open.spotify.com',
       'youtube.com', 'youtu.be',
       'apple.com', 'apps.apple.com',
+      'google.com', 'maps.google.com', 'goo.gl', 'maps.app.goo.gl',
     ];
     function isTrustedLinkUrl(url) {
       if (!url) return false;
@@ -1898,7 +1959,7 @@
 
       switch (screen) {
         case 'home':         renderHome(); break;
-        case 'biblioteca':   renderBiblioteca(); break;
+        case 'repertorios':  renderRepertorios(); break;
         case 'recomendar':   renderRecomendar(); break;
         case 'bromendators': renderBromendators(); break;
         case 'perfil':       renderPerfil(); break;
@@ -1931,7 +1992,7 @@
       const cat = CATEGORIES[r.categoria] || { emoji: '⭐', color: 'peliculas', singular: r.categoria };
       const author = getUserBy(r.autor);
       const avg = getRecAvgRating(r.id);
-      const resolvedImg = resolveImageUrl(r.imagen_url);
+      const resolvedImg = resolveImageUrl(r.imagen_url, r);
       const useImg = isTrustedImgUrl(resolvedImg);
       const poster = useImg
         ? `<div class="rec-poster-wrap"><img class="rec-poster" src="${escapeHTML(resolvedImg)}" alt="" data-fallback="${cat.emoji}"></div>`
@@ -1955,7 +2016,7 @@
       const cat = CATEGORIES[r.categoria] || { emoji: '⭐', color: 'peliculas', singular: r.categoria };
       const author = getUserBy(r.autor);
       const avg = getRecAvgRating(r.id);
-      const resolvedImg = resolveImageUrl(r.imagen_url);
+      const resolvedImg = resolveImageUrl(r.imagen_url, r);
       const useImg = isTrustedImgUrl(resolvedImg);
       const poster = useImg
         ? `<img class="rec-poster" src="${escapeHTML(resolvedImg)}" alt="" data-fallback="${cat.emoji}">`
@@ -2230,7 +2291,7 @@
         { key: 'peliculas',    label: 'Películas',    emoji: '🍿' },
         { key: 'series',       label: 'Series',       emoji: '📺' },
         { key: 'musica',       label: 'Música',       emoji: '🎧' },
-        { key: 'restauracion', label: 'Restauración', emoji: '🍴' },
+        { key: 'restauracion', label: 'Rincones', emoji: '🍴' },
       ];
       return `
         <div class="cat-filter" id="${idPrefix}-filter">
@@ -2243,60 +2304,99 @@
       `;
     }
     
-    function renderBiblioteca() {
-      const filter = state.bibliotecaFilter || 'all';
-      const sortKey = state.bibliotecaSort || 'date';
-      const myConsumido = state.data.consumido.filter(c => c.usuario === state.currentUser);
-      const recIds = new Set(myConsumido.map(c => c.recomendacion_id));
-      const baseRecs = state.data.recomendaciones.filter(r => recIds.has(r.id));
-      const filtered = filter === 'all' ? baseRecs : baseRecs.filter(r => r.categoria === filter);
-      const recs = sortRecs(filtered, sortKey);
-      
-      const list = document.getElementById('bibliotecaList');
-      const headerSlot = document.getElementById('bibliotecaHeaderActions');
-      
-      if (baseRecs.length === 0) {
-        if (headerSlot) headerSlot.innerHTML = '';
-        list.innerHTML = emptyStateHTML('📖', 'Tu biblioteca está vacía', 'Cuando valores recomendaciones, aparecerán aquí.');
-        return;
-      }
-      
-      list.innerHTML = `
-        ${categoryFilterHTML(filter, 'biblioteca')}
-        ${recs.length
-          ? `<div class="rec-list">${recs.map(recListItemHTML).join('')}</div>`
-          : `<p style="text-align:center; color:var(--ink-soft); padding: var(--s-5) var(--s-3); font-size:14px;">No hay nada en esta categoría aún.</p>`}
+    /* ========== RENDER: REPERTORIOS (placeholder, completar en Bloque I) ========== */
+    function renderRepertorios() {
+      const content = document.getElementById('repertoriosContent');
+      content.innerHTML = `
+        <div style="text-align:center; padding: var(--s-6) var(--s-3);">
+          <div style="font-size:64px; margin-bottom: var(--s-3); opacity:0.6;">🎸</div>
+          <h2 style="font-family:var(--font-display); font-size:22px; margin: 0 0 var(--s-2);">Próximamente</h2>
+          <p style="color:var(--ink-soft); font-size:14px; max-width: 280px; margin: 0 auto;">
+            Aquí vais a poder crear repertorios con las canciones que recomendéis. Estamos en ello.
+          </p>
+        </div>
       `;
-      
-      // Listeners
-      list.querySelectorAll('#biblioteca-filter .cat-filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          state.bibliotecaFilter = btn.dataset.cat;
-          renderBiblioteca();
-        });
-      });
-      renderHeaderSort('bibliotecaHeaderActions', 'biblioteca', sortKey, (sort) => {
-        state.bibliotecaSort = sort;
-        renderBiblioteca();
-      });
     }
 
     /* ========== RENDER: PERFIL ========== */
     function renderPerfil() {
       const u = getUserBy(state.currentUser);
       if (!u) return;
-      const filter = state.perfilFilter || 'all';
-      const sortKey = state.perfilSort || 'date';
-      const baseRecs = state.data.recomendaciones.filter(r => r.autor === state.currentUser);
-      const filtered = filter === 'all' ? baseRecs : baseRecs.filter(r => r.categoria === filter);
-      const myRecs = sortRecs(filtered, sortKey);
+      
+      // Inicializar tab si no existe
+      if (!state.perfilTab) state.perfilTab = 'recomendaciones';
+      const tab = state.perfilTab;
+      
+      // === Cálculos de "Mis recomendaciones" ===
+      const filterRec = state.perfilFilter || 'all';
+      const sortRec   = state.perfilSort   || 'date';
+      const myRecsBase = state.data.recomendaciones.filter(r => r.autor === state.currentUser);
+      const myRecsFiltered = filterRec === 'all' ? myRecsBase : myRecsBase.filter(r => r.categoria === filterRec);
+      const myRecs = sortRecs(myRecsFiltered, sortRec);
+      
+      // === Cálculos de "Mis valoraciones" (= todo lo que toqué: valoraciones + consumido) ===
+      // Mezcla recomendaciones que el usuario haya valorado O marcado como consumido (autoría ajena o propia)
       const myVals = state.data.valoraciones.filter(v => v.usuario === state.currentUser);
-
+      const myCons = state.data.consumido.filter(c => c.usuario === state.currentUser);
+      const touchedIds = new Set([
+        ...myVals.map(v => v.recomendacion_id),
+        ...myCons.map(c => c.recomendacion_id),
+      ]);
+      const touchedBase = state.data.recomendaciones.filter(r => touchedIds.has(r.id));
+      const filterVal = state.valFilter || 'all';
+      const sortVal   = state.valSort   || 'date';
+      const touchedFiltered = filterVal === 'all' ? touchedBase : touchedBase.filter(r => r.categoria === filterVal);
+      const touchedRecs = sortRecs(touchedFiltered, sortVal);
+      
+      // Subtítulo siempre con los contadores totales
       document.getElementById('perfilSubtitle').textContent =
-        `${baseRecs.length} recomendacion${baseRecs.length === 1 ? '' : 'es'} · ${myVals.length} valoracion${myVals.length === 1 ? '' : 'es'}`;
-
+        `${myRecsBase.length} recomendacion${myRecsBase.length === 1 ? '' : 'es'} · ${touchedBase.length} valoracion${touchedBase.length === 1 ? '' : 'es'}`;
+      
       const isUserAdmin = String(u.admin).toUpperCase() === 'TRUE';
-
+      
+      // === Render según tab activo ===
+      const tabsHTML = `
+        <div class="profile-tabs" role="tablist">
+          <button class="profile-tab" data-tab="recomendaciones" aria-selected="${tab === 'recomendaciones'}" role="tab">
+            Mis recomendaciones <span class="profile-tab-count">${myRecsBase.length}</span>
+          </button>
+          <button class="profile-tab" data-tab="valoraciones" aria-selected="${tab === 'valoraciones'}" role="tab">
+            Mis valoraciones <span class="profile-tab-count">${touchedBase.length}</span>
+          </button>
+        </div>
+      `;
+      
+      let tabBody = '';
+      if (tab === 'recomendaciones') {
+        if (myRecsBase.length === 0) {
+          tabBody = emptyStateHTML('✨', 'No has recomendado nada aún', 'Pulsa el botón verde para empezar.');
+        } else {
+          tabBody = `
+            ${categoryFilterHTML(filterRec, 'perfil')}
+            <div class="sort-row-standalone">
+              ${sortDropdownHTML(sortRec, 'perfil')}
+            </div>
+            ${myRecs.length
+              ? `<div class="rec-list">${myRecs.map(recListItemHTML).join('')}</div>`
+              : `<p style="text-align:center; color:var(--ink-soft); padding: var(--s-5) var(--s-3); font-size:14px;">No hay recomendaciones en esta categoría.</p>`}
+          `;
+        }
+      } else {
+        if (touchedBase.length === 0) {
+          tabBody = emptyStateHTML('📖', 'Aún no has valorado nada', 'Cuando valores o marques recomendaciones como consumidas, aparecerán aquí.');
+        } else {
+          tabBody = `
+            ${categoryFilterHTML(filterVal, 'val')}
+            <div class="sort-row-standalone">
+              ${sortDropdownHTML(sortVal, 'val')}
+            </div>
+            ${touchedRecs.length
+              ? `<div class="rec-list">${touchedRecs.map(recListItemHTML).join('')}</div>`
+              : `<p style="text-align:center; color:var(--ink-soft); padding: var(--s-5) var(--s-3); font-size:14px;">No hay nada en esta categoría aún.</p>`}
+          `;
+        }
+      }
+      
       const content = document.getElementById('perfilContent');
       content.innerHTML = `
         <div class="rec-card" style="flex-direction:row; align-items:center; gap: var(--s-4); padding: var(--s-4); margin-bottom: var(--s-3);">
@@ -2306,43 +2406,56 @@
             <p style="margin:0; color:var(--ink-soft); font-size:13px;">@${u.username}${isUserAdmin ? ' · admin ⭐' : ''}</p>
           </div>
         </div>
-
+        
         ${isUserAdmin ? `
           <div style="margin-bottom: var(--s-4); display:flex; gap: var(--s-2); flex-wrap: wrap; justify-content:center;">
             <button class="btn-ghost" onclick="logout()" style="font-size:13px;">🔄 Cambiar de usuario</button>
             <button class="btn-ghost" onclick="downloadBackup()" style="font-size:13px;">💾 Backup JSON</button>
           </div>
         ` : ''}
-
-        <h2 style="font-family:var(--font-display); font-size:22px; margin: var(--s-5) 0 var(--s-3);">Mis recomendaciones</h2>
-        ${baseRecs.length ? `
-          ${categoryFilterHTML(filter, 'perfil')}
-          <div class="sort-row-standalone">
-            ${sortDropdownHTML(sortKey, 'perfil')}
-          </div>
-        ` : ''}
-        ${baseRecs.length === 0
-          ? emptyStateHTML('✨', 'No has recomendado nada aún', 'Pulsa el botón verde para empezar.')
-          : (myRecs.length
-              ? `<div class="rec-list">${myRecs.map(recListItemHTML).join('')}</div>`
-              : `<p style="text-align:center; color:var(--ink-soft); padding: var(--s-5) var(--s-3); font-size:14px;">No hay recomendaciones en esta categoría.</p>`)}
+        
+        ${tabsHTML}
+        <div class="profile-tab-body">
+          ${tabBody}
+        </div>
       `;
       
       // Limpiar header slot (no se usa en perfil)
       const headerSlot = document.getElementById('perfilHeaderActions');
       if (headerSlot) headerSlot.innerHTML = '';
       
-      // Listeners de filtro
-      content.querySelectorAll('#perfil-filter .cat-filter-btn').forEach(btn => {
+      // Listener tabs
+      content.querySelectorAll('.profile-tab').forEach(btn => {
         btn.addEventListener('click', () => {
-          state.perfilFilter = btn.dataset.cat;
+          state.perfilTab = btn.dataset.tab;
           renderPerfil();
         });
       });
-      bindSortDropdown('perfil', (sort) => {
-        state.perfilSort = sort;
-        renderPerfil();
-      });
+      
+      // Listeners de filtros y sort según tab activo
+      if (tab === 'recomendaciones') {
+        content.querySelectorAll('#perfil-filter .cat-filter-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.perfilFilter = btn.dataset.cat;
+            renderPerfil();
+          });
+        });
+        bindSortDropdown('perfil', (sort) => {
+          state.perfilSort = sort;
+          renderPerfil();
+        });
+      } else {
+        content.querySelectorAll('#val-filter .cat-filter-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.valFilter = btn.dataset.cat;
+            renderPerfil();
+          });
+        });
+        bindSortDropdown('val', (sort) => {
+          state.valSort = sort;
+          renderPerfil();
+        });
+      }
     }
     function logout() {
       if (!confirm('¿Cerrar sesión y elegir otro usuario?')) return;
@@ -2465,6 +2578,7 @@
         { key: 'restaurante', label: 'Restaurante' },
         { key: 'bar',         label: 'Bar' },
         { key: 'cafe',        label: 'Café' },
+        { key: 'otro',        label: 'Otro' },
       ],
     };
     
@@ -2564,6 +2678,7 @@
         tituloLabel.textContent = 'Nombre del sitio';
         if (subcategoria === 'bar')        tituloInput.placeholder = 'Ej: Bar Cañete';
         else if (subcategoria === 'cafe')  tituloInput.placeholder = 'Ej: Satan\'s Coffee Corner';
+        else if (subcategoria === 'otro')  tituloInput.placeholder = 'Ej: Mercado de Sant Antoni';
         else                                tituloInput.placeholder = 'Ej: Disfrutar';
         // Ubicación obligatoria (Places la necesita para encontrar el sitio correcto)
         lugarGroup.style.display = 'block';
@@ -2728,7 +2843,7 @@
       }
       
       btn.disabled = true;
-      showBusy('Compartiendo recomendación…', 'Buscando info en el modular naranja 🔍');
+      showBusy('Compartiendo recomendación…', 'Ahora estoy gastando agua para enfriar mis servidores mientras busco data de tu recomendación 💦');
       try {
         const dirigido_a = (state.formNew.destinatarios || []).join(',');
         const res = await apiGet('createRec', {
@@ -2782,7 +2897,7 @@
 
       document.getElementById('recDetailMeta').textContent = `${cat.singular} · ${fmtDate(r.timestamp)}`;
 
-      const resolvedImg = resolveImageUrl(r.imagen_url);
+      const resolvedImg = resolveImageUrl(r.imagen_url, r);
       const useImg = isTrustedImgUrl(resolvedImg);
       const poster = useImg
         ? `<img class="detail-poster" src="${escapeHTML(resolvedImg)}" alt="" data-fallback="${cat.emoji}" data-fallback-class="detail-poster-ph">`
@@ -3173,7 +3288,7 @@
               closeModal();
               showBusy(
                 shouldReEnrich ? 'Guardando y regenerando…' : 'Guardando…',
-                shouldReEnrich ? 'Buscando info en el modular naranja 🔍' : 'Un momento por favor'
+                shouldReEnrich ? 'Ahora estoy gastando agua para enfriar mis servidores mientras busco data de tu recomendación 💦' : 'Un momento por favor'
               );
 
               try {
