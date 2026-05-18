@@ -712,6 +712,254 @@
       margin-bottom: var(--s-3);
     }
     
+    /* ========== REPERTORIOS ========== */
+    .rep-list { display: flex; flex-direction: column; gap: var(--s-3); }
+    .rep-card {
+      display: flex;
+      gap: var(--s-3);
+      align-items: center;
+      background: var(--bg-card);
+      border-radius: 14px;
+      padding: var(--s-3);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      text-decoration: none;
+      color: inherit;
+      transition: transform .12s ease, box-shadow .15s ease;
+    }
+    .rep-card:active { transform: scale(0.99); }
+    .rep-card-body { flex: 1; min-width: 0; }
+    .rep-card-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rep-card-desc {
+      font-size: 12px;
+      color: var(--ink-soft);
+      margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rep-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--ink-soft);
+      flex-wrap: wrap;
+    }
+    .rep-card-count {
+      background: rgba(0,0,0,0.06);
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+    }
+    .rep-card-spotify {
+      color: #1DB954;
+      font-weight: 600;
+    }
+    .rep-card-arrow {
+      color: var(--ink-soft);
+      font-size: 22px;
+      line-height: 1;
+      padding: 0 4px;
+    }
+    
+    /* Detalle del repertorio */
+    .rep-detail-header {
+      display: flex;
+      gap: var(--s-3);
+      align-items: flex-start;
+      margin-bottom: var(--s-4);
+    }
+    .rep-detail-info { flex: 1; min-width: 0; }
+    .rep-detail-info h2 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      margin: 0 0 4px;
+      color: var(--ink);
+    }
+    .rep-detail-desc {
+      margin: 0 0 6px;
+      color: var(--ink-soft);
+      font-size: 13px;
+    }
+    .rep-detail-meta {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 11px;
+    }
+    .rep-spotify-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #1DB954;
+      color: white;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      margin-bottom: var(--s-4);
+      transition: background .15s ease;
+    }
+    .rep-spotify-cta:active { background: #1aa44a; }
+    
+    .rep-tracks-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: var(--s-4) 0 var(--s-3);
+    }
+    .rep-tracks-header h3 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      margin: 0;
+      color: var(--ink);
+    }
+    .rep-tracks-list { display: flex; flex-direction: column; gap: var(--s-2); }
+    .rep-track-item {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      text-decoration: none;
+      color: inherit;
+    }
+    .rep-track-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: var(--c-musica-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .rep-track-body { flex: 1; min-width: 0; }
+    .rep-track-title {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--ink);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rep-track-meta {
+      font-size: 11px;
+      color: var(--ink-soft);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rep-track-remove {
+      background: transparent;
+      border: 0;
+      color: var(--c-danger);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 6px 8px;
+      flex-shrink: 0;
+    }
+    
+    /* Modal: filas-acción (para acciones del repertorio) */
+    .modal-actions-list { display: flex; flex-direction: column; gap: 4px; }
+    .modal-action-row {
+      width: 100%;
+      background: transparent;
+      border: 0;
+      padding: 12px 10px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+      transition: background .12s ease;
+    }
+    .modal-action-row:hover { background: rgba(0,0,0,0.04); }
+    .modal-action-row.danger { color: var(--c-danger); }
+    
+    /* Botón danger genérico (para confirmar borrado) */
+    .btn-primary.danger { background: var(--c-danger); }
+    .btn-primary.danger:active { background: #a23830; }
+    
+    /* Candidato de canción/repertorio en modal */
+    .track-candidate {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      background: transparent;
+      border: 0;
+      padding: 10px var(--s-3);
+      text-align: left;
+      cursor: pointer;
+      transition: background .12s ease;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .track-candidate:last-child { border-bottom: 0; }
+    .track-candidate:hover:not(:disabled) { background: rgba(0,0,0,0.03); }
+    .track-candidate-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--c-musica-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .track-candidate-body { flex: 1; min-width: 0; }
+    .track-candidate-title {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--ink);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .track-candidate-meta {
+      font-size: 11px;
+      color: var(--ink-soft);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .track-candidate-plus {
+      color: var(--c-action);
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+      padding: 0 6px;
+    }
+    
+    /* Header action button (3 puntitos) */
+    .header-action-btn {
+      background: transparent;
+      border: 0;
+      color: var(--ink);
+      padding: 8px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background .12s ease;
+    }
+    .header-action-btn:hover { background: rgba(0,0,0,0.05); }
+    
     /* Tabs de Mi perfil: Mis recomendaciones / Mis valoraciones */
     .profile-tabs {
       display: flex;
@@ -1240,6 +1488,17 @@
         </div>
       </header>
       <div id="repertoriosContent"></div>
+    </section>
+    
+    <section class="screen" id="screen-repertorio">
+      <header class="screen-header">
+        <button class="back-btn" onclick="history.back()" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <div class="title-block">
+          <h1 id="repertorioDetailTitle">Repertorio</h1>
+        </div>
+        <div class="header-actions" id="repertorioDetailHeaderActions"></div>
+      </header>
+      <div id="repertorioDetailContent"></div>
     </section>
 
     <section class="screen" id="screen-recomendar">
@@ -1960,6 +2219,7 @@
       switch (screen) {
         case 'home':         renderHome(); break;
         case 'repertorios':  renderRepertorios(); break;
+        case 'repertorio':   renderRepertorioDetail(param); break;
         case 'recomendar':   renderRecomendar(); break;
         case 'bromendators': renderBromendators(); break;
         case 'perfil':       renderPerfil(); break;
@@ -2304,18 +2564,512 @@
       `;
     }
     
-    /* ========== RENDER: REPERTORIOS (placeholder, completar en Bloque I) ========== */
+    /* ========== REPERTORIOS ========== */
+    
+    /* Paleta de colores para cards: rota según hash del id para que cada repertorio tenga su propio look */
+    const REP_PALETTE = [
+      { from: '#1DB954', to: '#0d6e36', emoji: '🎵' },  // verde Spotify
+      { from: '#FFC857', to: '#D4A21F', emoji: '🎸' },  // amarillo
+      { from: '#FF8A80', to: '#C2453B', emoji: '🎤' },  // rojo
+      { from: '#6BA4FF', to: '#2A5FB8', emoji: '🥁' },  // azul
+      { from: '#B99AE6', to: '#6B4FAE', emoji: '🎹' },  // lila
+    ];
+    function repPalette(id) {
+      if (!id) return REP_PALETTE[0];
+      let h = 0;
+      for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0;
+      return REP_PALETTE[Math.abs(h) % REP_PALETTE.length];
+    }
+    function repCoverHTML(rep, size) {
+      const pal = repPalette(rep.id);
+      const px = size || 60;
+      const fs = Math.round(px * 0.42);
+      return `<div style="width:${px}px; height:${px}px; border-radius:${Math.round(px * 0.18)}px; background:linear-gradient(135deg, ${pal.from} 0%, ${pal.to} 100%); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:${fs}px;">${pal.emoji}</div>`;
+    }
+    function getRepertorioById(id) {
+      return state.data.repertorios.find(r => r.id === id);
+    }
+    function getRepertorioItems(repId) {
+      return state.data.repertoriosItems
+        .filter(i => i.repertorio_id === repId)
+        .sort((a, b) => String(a.timestamp).localeCompare(String(b.timestamp)));
+    }
+    function getRepertorioTracks(repId) {
+      // Devuelve las recs musicales asociadas, con el item (para tener añadido_por)
+      const items = getRepertorioItems(repId);
+      return items.map(item => {
+        const rec = state.data.recomendaciones.find(r => r.id === item.rec_id);
+        return rec ? { rec, item } : null;
+      }).filter(Boolean);
+    }
+    function canEditRepertorio(rep) {
+      // Cualquiera puede editar (decisión de v0.1)
+      return !!rep && !!state.currentUser;
+    }
+    function canDeleteRepertorio(rep) {
+      if (!rep || !state.currentUser) return false;
+      const u = getUserBy(state.currentUser);
+      const isAdmin = u && String(u.admin).toUpperCase() === 'TRUE';
+      return rep.creador === state.currentUser || isAdmin;
+    }
+    
+    /* ========== RENDER: REPERTORIOS (lista) ========== */
     function renderRepertorios() {
       const content = document.getElementById('repertoriosContent');
-      content.innerHTML = `
-        <div style="text-align:center; padding: var(--s-6) var(--s-3);">
-          <div style="font-size:64px; margin-bottom: var(--s-3); opacity:0.6;">🎸</div>
-          <h2 style="font-family:var(--font-display); font-size:22px; margin: 0 0 var(--s-2);">Próximamente</h2>
-          <p style="color:var(--ink-soft); font-size:14px; max-width: 280px; margin: 0 auto;">
-            Aquí vais a poder crear repertorios con las canciones que recomendéis. Estamos en ello.
-          </p>
-        </div>
+      const reps = (state.data.repertorios || []).slice().sort((a, b) =>
+        String(b.timestamp).localeCompare(String(a.timestamp)) // más recientes arriba
+      );
+      
+      const newBtn = `
+        <button class="btn-primary" id="btn-new-rep" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom: var(--s-4);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px;"><path d="M12 5v14M5 12h14"/></svg>
+          Crear repertorio
+        </button>
       `;
+      
+      if (!reps.length) {
+        content.innerHTML = `
+          ${newBtn}
+          ${emptyStateHTML('🎸', 'Sin repertorios aún', 'Crea tu primer repertorio para agrupar canciones del grupo.')}
+        `;
+      } else {
+        content.innerHTML = `
+          ${newBtn}
+          <div class="rep-list">
+            ${reps.map(repertorioCardHTML).join('')}
+          </div>
+        `;
+      }
+      
+      // Listener: crear nuevo
+      const btnNew = document.getElementById('btn-new-rep');
+      if (btnNew) btnNew.addEventListener('click', openCreateRepertorioModal);
+    }
+    
+    function repertorioCardHTML(rep) {
+      const tracks = getRepertorioTracks(rep.id);
+      const author = getUserBy(rep.creador);
+      const hasSpotify = !!rep.spotify_url;
+      return `
+        <a href="#/repertorio/${rep.id}" class="rep-card">
+          ${repCoverHTML(rep, 60)}
+          <div class="rep-card-body">
+            <div class="rep-card-title">${escapeHTML(rep.nombre)}</div>
+            ${rep.descripcion ? `<div class="rep-card-desc">${escapeHTML(rep.descripcion)}</div>` : ''}
+            <div class="rep-card-meta">
+              ${author ? `${avatarHTML(author.username, 'xs', 18)}<span>${escapeHTML(author.nombre)}</span>` : ''}
+              <span class="rep-card-count">${tracks.length} ${tracks.length === 1 ? 'canción' : 'canciones'}</span>
+              ${hasSpotify ? '<span class="rep-card-spotify">▶ Spotify</span>' : ''}
+            </div>
+          </div>
+          <div class="rep-card-arrow">›</div>
+        </a>
+      `;
+    }
+    
+    /* ========== RENDER: REPERTORIO (detalle) ========== */
+    function renderRepertorioDetail(repId) {
+      const rep = getRepertorioById(repId);
+      const content = document.getElementById('repertorioDetailContent');
+      const titleEl = document.getElementById('repertorioDetailTitle');
+      const headerSlot = document.getElementById('repertorioDetailHeaderActions');
+      
+      if (!rep) {
+        if (titleEl) titleEl.textContent = 'Repertorio';
+        content.innerHTML = emptyStateHTML('❓', 'Repertorio no encontrado', 'Puede que se haya borrado.');
+        if (headerSlot) headerSlot.innerHTML = '';
+        return;
+      }
+      
+      if (titleEl) titleEl.textContent = rep.nombre;
+      
+      const tracks = getRepertorioTracks(rep.id);
+      const author = getUserBy(rep.creador);
+      const canEdit = canEditRepertorio(rep);
+      const canDelete = canDeleteRepertorio(rep);
+      
+      // Header con menú de acciones
+      if (headerSlot) {
+        headerSlot.innerHTML = `
+          <button class="header-action-btn" id="rep-actions-btn" aria-label="Acciones">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px;"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+          </button>
+        `;
+      }
+      
+      const spotifyCTA = rep.spotify_url
+        ? `<a href="${escapeHTML(rep.spotify_url)}" target="_blank" rel="noopener" class="rep-spotify-cta">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.6 14.4c-.2.3-.6.4-.9.2-2.5-1.5-5.6-1.9-9.2-1-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 4-1 7.5-.6 10.3 1.1.3.2.4.6.1.9zm1.2-2.7c-.2.4-.7.5-1.1.3-2.8-1.7-7.1-2.2-10.5-1.2-.4.1-.9-.1-1-.6-.1-.4.1-.9.6-1 3.9-1.2 8.7-.6 11.9 1.4.4.2.5.7.3 1.1zm.1-2.8c-3.4-2-9-2.2-12.2-1.2-.5.2-1.1-.1-1.3-.7-.2-.5.1-1.1.7-1.3 3.7-1.1 9.9-.9 13.8 1.4.5.3.7 1 .4 1.4-.3.6-.9.7-1.4.4z"/></svg>
+            Abrir en Spotify
+          </a>`
+        : '';
+      
+      content.innerHTML = `
+        <div class="rep-detail-header">
+          ${repCoverHTML(rep, 80)}
+          <div class="rep-detail-info">
+            <h2>${escapeHTML(rep.nombre)}</h2>
+            ${rep.descripcion ? `<p class="rep-detail-desc">${escapeHTML(rep.descripcion)}</p>` : ''}
+            <p class="rep-detail-meta">
+              ${author ? `Creado por ${escapeHTML(author.nombre)} · ` : ''}${tracks.length} ${tracks.length === 1 ? 'canción' : 'canciones'}
+            </p>
+          </div>
+        </div>
+        
+        ${spotifyCTA}
+        
+        <div class="rep-tracks-header">
+          <h3>Canciones</h3>
+          <button class="btn-ghost" id="btn-add-track" style="font-size:13px; padding:6px 12px;">
+            + Añadir canción
+          </button>
+        </div>
+        
+        ${tracks.length === 0
+          ? `<p style="text-align:center; color:var(--ink-soft); padding: var(--s-4) var(--s-3); font-size:13px;">Aún no hay canciones. Añade algunas desde el botón de arriba o desde el detalle de cualquier recomendación musical.</p>`
+          : `<div class="rep-tracks-list">${tracks.map(t => trackItemHTML(t, canEdit, rep.id)).join('')}</div>`}
+      `;
+      
+      // Listeners
+      const btnAdd = document.getElementById('btn-add-track');
+      if (btnAdd) btnAdd.addEventListener('click', () => openAddTrackModal(rep.id));
+      
+      // Botones quitar
+      content.querySelectorAll('[data-remove-track]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const recId = btn.dataset.removeTrack;
+          handleRemoveTrack(rep.id, recId);
+        });
+      });
+      
+      // Menú de acciones del header
+      const actionsBtn = document.getElementById('rep-actions-btn');
+      if (actionsBtn) {
+        actionsBtn.addEventListener('click', () => openRepertorioActionsModal(rep, canEdit, canDelete));
+      }
+    }
+    
+    function trackItemHTML(t, canRemove, repId) {
+      const { rec } = t;
+      const cat = CATEGORIES[rec.categoria] || { emoji: '🎧', color: 'musica' };
+      const author = getUserBy(t.item.añadido_por || t.item['añadido_por']);
+      const creador = rec.creador ? escapeHTML(rec.creador) : '';
+      return `
+        <a href="#/rec/${rec.id}" class="rep-track-item">
+          <div class="rep-track-icon">${cat.emoji}</div>
+          <div class="rep-track-body">
+            <div class="rep-track-title">${escapeHTML(rec.titulo)}</div>
+            <div class="rep-track-meta">
+              ${creador ? `${creador} · ` : ''}añadida por ${author ? escapeHTML(author.nombre) : '—'}
+            </div>
+          </div>
+          ${canRemove ? `<button class="rep-track-remove" data-remove-track="${rec.id}" aria-label="Quitar">✕</button>` : ''}
+        </a>
+      `;
+    }
+    
+    /* ========== MODALES: crear / editar / borrar / añadir canción ========== */
+    
+    function openCreateRepertorioModal() {
+      showModal({
+        title: 'Crear repertorio',
+        bodyHtml: `
+          <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input type="text" id="rep-name" class="form-input" placeholder="Ej: Verano 2026" maxlength="60">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Descripción <span class="opt-tag">opcional</span></label>
+            <input type="text" id="rep-desc" class="form-input" placeholder="Ej: las que rotan en los ensayos" maxlength="120">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Enlace de Spotify <span class="opt-tag">opcional</span></label>
+            <input type="text" id="rep-spotify" class="form-input" placeholder="https://open.spotify.com/playlist/...">
+          </div>
+        `,
+        primaryLabel: 'Crear',
+        onSubmit: handleCreateRepertorio,
+        secondaryLabel: 'Cancelar',
+      });
+      setTimeout(() => {
+        const n = document.getElementById('rep-name');
+        if (n) n.focus();
+      }, 100);
+    }
+    
+    async function handleCreateRepertorio() {
+      const nombre = (document.getElementById('rep-name').value || '').trim();
+      const descripcion = (document.getElementById('rep-desc').value || '').trim();
+      const spotify_url = (document.getElementById('rep-spotify').value || '').trim();
+      if (!nombre) return toast('Ponle un nombre al repertorio', 'error');
+      
+      try {
+        showBusy('Creando repertorio…');
+        const res = await apiGet('createRepertorio', {
+          nombre, descripcion, spotify_url,
+          creador: state.currentUser,
+        });
+        hideBusy();
+        closeModal();
+        toast('Repertorio creado', 'success');
+        await loadData({ silent: true });
+        // Navegar al detalle
+        if (res.id) location.hash = `#/repertorio/${res.id}`;
+      } catch (err) {
+        hideBusy();
+        toast('Error: ' + err.message, 'error');
+      }
+    }
+    
+    function openEditRepertorioModal(rep) {
+      showModal({
+        title: 'Editar repertorio',
+        bodyHtml: `
+          <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input type="text" id="rep-name" class="form-input" value="${escapeHTML(rep.nombre)}" maxlength="60">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Descripción <span class="opt-tag">opcional</span></label>
+            <input type="text" id="rep-desc" class="form-input" value="${escapeHTML(rep.descripcion || '')}" maxlength="120">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Enlace de Spotify <span class="opt-tag">opcional</span></label>
+            <input type="text" id="rep-spotify" class="form-input" value="${escapeHTML(rep.spotify_url || '')}">
+          </div>
+        `,
+        primaryLabel: 'Guardar',
+        onSubmit: () => handleUpdateRepertorio(rep.id),
+        secondaryLabel: 'Cancelar',
+      });
+    }
+    
+    async function handleUpdateRepertorio(repId) {
+      const nombre = (document.getElementById('rep-name').value || '').trim();
+      const descripcion = (document.getElementById('rep-desc').value || '').trim();
+      const spotify_url = (document.getElementById('rep-spotify').value || '').trim();
+      if (!nombre) return toast('El nombre no puede estar vacío', 'error');
+      
+      try {
+        showBusy('Guardando…');
+        await apiGet('updateRepertorio', {
+          id: repId, nombre, descripcion, spotify_url,
+        });
+        hideBusy();
+        closeModal();
+        toast('Repertorio actualizado', 'success');
+        await loadData({ silent: true });
+        renderRepertorioDetail(repId);
+      } catch (err) {
+        hideBusy();
+        toast('Error: ' + err.message, 'error');
+      }
+    }
+    
+    function openRepertorioActionsModal(rep, canEdit, canDelete) {
+      const rows = [];
+      if (canEdit) rows.push(`<button class="modal-action-row" id="rep-act-edit">✏️ Editar repertorio</button>`);
+      if (canDelete) rows.push(`<button class="modal-action-row danger" id="rep-act-delete">🗑️ Borrar repertorio</button>`);
+      
+      showModal({
+        title: rep.nombre,
+        bodyHtml: `
+          <p style="color:var(--ink-soft); font-size:13px; margin: 0 0 var(--s-3);">Acciones</p>
+          <div class="modal-actions-list">${rows.join('')}</div>
+        `,
+        secondaryLabel: 'Cerrar',
+      });
+      setTimeout(() => {
+        const e = document.getElementById('rep-act-edit');
+        if (e) e.addEventListener('click', () => { closeModal(); openEditRepertorioModal(rep); });
+        const d = document.getElementById('rep-act-delete');
+        if (d) d.addEventListener('click', () => { closeModal(); confirmDeleteRepertorio(rep); });
+      }, 50);
+    }
+    
+    function confirmDeleteRepertorio(rep) {
+      showModal({
+        title: '¿Borrar repertorio?',
+        bodyHtml: `<p style="font-size:14px;">Se borrará <strong>${escapeHTML(rep.nombre)}</strong> y todas sus canciones del repertorio. Las recomendaciones musicales originales <strong>no</strong> se borran.</p>`,
+        primaryLabel: 'Borrar',
+        onSubmit: () => handleDeleteRepertorio(rep.id),
+        secondaryLabel: 'Cancelar',
+      });
+      // Hacer el botón de borrar en rojo
+      setTimeout(() => {
+        const btn = document.getElementById('modalPrimary');
+        if (btn) btn.classList.add('danger');
+      }, 30);
+    }
+    
+    async function handleDeleteRepertorio(repId) {
+      try {
+        showBusy('Borrando…');
+        await apiGet('deleteRepertorio', { id: repId });
+        hideBusy();
+        closeModal();
+        toast('Repertorio borrado', 'success');
+        await loadData({ silent: true });
+        location.hash = '#/repertorios';
+      } catch (err) {
+        hideBusy();
+        toast('Error: ' + err.message, 'error');
+      }
+    }
+    
+    /* Añadir canción: selector de canciones disponibles (recs musicales no presentes ya en el repertorio) */
+    function openAddTrackModal(repId) {
+      const rep = getRepertorioById(repId);
+      if (!rep) return;
+      const existingRecIds = new Set(getRepertorioItems(repId).map(i => i.rec_id));
+      // Filtrar recs musicales no presentes
+      const candidates = state.data.recomendaciones
+        .filter(r => r.categoria === 'musica' && !existingRecIds.has(r.id))
+        .sort((a, b) => String(b.timestamp).localeCompare(String(a.timestamp)));
+      
+      const bodyHTML = candidates.length === 0
+        ? `<p style="color:var(--ink-soft); font-size:14px; text-align:center; padding: var(--s-3) 0;">No hay más canciones para añadir. Crea recomendaciones musicales y vuelve aquí.</p>`
+        : `
+          <input type="text" id="track-search" class="form-input" placeholder="Buscar canción…" style="margin-bottom: var(--s-3);">
+          <div id="track-candidates" style="max-height: 50vh; overflow-y: auto; margin: 0 calc(-1 * var(--s-3));">
+            ${candidates.map(r => trackCandidateHTML(r)).join('')}
+          </div>
+        `;
+      
+      showModal({
+        title: 'Añadir canción',
+        bodyHtml: bodyHTML,
+        secondaryLabel: 'Cerrar',
+      });
+      
+      // Listeners post-render
+      setTimeout(() => {
+        const search = document.getElementById('track-search');
+        if (search) {
+          search.addEventListener('input', () => {
+            const q = search.value.trim().toLowerCase();
+            document.querySelectorAll('[data-candidate-row]').forEach(row => {
+              const text = (row.dataset.candidateText || '').toLowerCase();
+              row.style.display = !q || text.includes(q) ? '' : 'none';
+            });
+          });
+        }
+        document.querySelectorAll('[data-add-track]').forEach(btn => {
+          btn.addEventListener('click', () => handleAddTrack(repId, btn.dataset.addTrack));
+        });
+      }, 50);
+    }
+    
+    function trackCandidateHTML(rec) {
+      const subcat = rec.subcategoria || '';
+      const creador = rec.creador || '';
+      const searchText = [rec.titulo, creador, subcat].join(' ');
+      return `
+        <button class="track-candidate" data-candidate-row data-candidate-text="${escapeHTML(searchText)}" data-add-track="${rec.id}">
+          <div class="track-candidate-icon">🎧</div>
+          <div class="track-candidate-body">
+            <div class="track-candidate-title">${escapeHTML(rec.titulo)}</div>
+            <div class="track-candidate-meta">${creador ? escapeHTML(creador) + ' · ' : ''}${subcat}</div>
+          </div>
+          <div class="track-candidate-plus">+</div>
+        </button>
+      `;
+    }
+    
+    async function handleAddTrack(repId, recId) {
+      try {
+        showBusy('Añadiendo…');
+        const res = await apiGet('addToRepertorio', {
+          repertorioId: repId, recId, usuario: state.currentUser,
+        });
+        hideBusy();
+        closeModal();
+        if (res.skipped) {
+          toast('Esa canción ya estaba en el repertorio', 'success');
+        } else {
+          toast('Canción añadida', 'success');
+        }
+        await loadData({ silent: true });
+        renderRepertorioDetail(repId);
+      } catch (err) {
+        hideBusy();
+        toast('Error: ' + err.message, 'error');
+      }
+    }
+    
+    async function handleRemoveTrack(repId, recId) {
+      if (!confirm('¿Quitar esta canción del repertorio?')) return;
+      try {
+        showBusy('Quitando…');
+        await apiGet('removeFromRepertorio', { repertorioId: repId, recId });
+        hideBusy();
+        toast('Quitada', 'success');
+        await loadData({ silent: true });
+        renderRepertorioDetail(repId);
+      } catch (err) {
+        hideBusy();
+        toast('Error: ' + err.message, 'error');
+      }
+    }
+    
+    /* Selector para añadir UNA rec musical a un repertorio existente (desde detalle de la rec) */
+    function openPickRepertorioModal(recId) {
+      const reps = (state.data.repertorios || []).slice().sort((a, b) =>
+        String(b.timestamp).localeCompare(String(a.timestamp))
+      );
+      
+      const bodyHTML = reps.length === 0
+        ? `<p style="color:var(--ink-soft); font-size:14px; text-align:center; padding: var(--s-3) 0;">Aún no hay repertorios. Crea uno desde la pestaña Repertorios.</p>`
+        : `
+          <div style="max-height: 50vh; overflow-y: auto; margin: 0 calc(-1 * var(--s-3));">
+            ${reps.map(rep => {
+              const tracks = getRepertorioTracks(rep.id);
+              const already = tracks.some(t => t.rec.id === recId);
+              return `
+                <button class="track-candidate" data-pick-rep="${rep.id}" ${already ? 'disabled style="opacity:0.45;"' : ''}>
+                  ${repCoverHTML(rep, 40)}
+                  <div class="track-candidate-body">
+                    <div class="track-candidate-title">${escapeHTML(rep.nombre)}</div>
+                    <div class="track-candidate-meta">${tracks.length} ${tracks.length === 1 ? 'canción' : 'canciones'}${already ? ' · ya está' : ''}</div>
+                  </div>
+                  <div class="track-candidate-plus">${already ? '✓' : '+'}</div>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        `;
+      
+      showModal({
+        title: 'Añadir a repertorio',
+        bodyHtml: bodyHTML,
+        secondaryLabel: 'Cerrar',
+      });
+      
+      setTimeout(() => {
+        document.querySelectorAll('[data-pick-rep]').forEach(btn => {
+          if (btn.disabled) return;
+          btn.addEventListener('click', () => handlePickRepertorio(btn.dataset.pickRep, recId));
+        });
+      }, 50);
+    }
+    
+    async function handlePickRepertorio(repId, recId) {
+      try {
+        showBusy('Añadiendo…');
+        const res = await apiGet('addToRepertorio', {
+          repertorioId: repId, recId, usuario: state.currentUser,
+        });
+        hideBusy();
+        closeModal();
+        if (res.skipped) toast('Ya estaba en ese repertorio', 'success');
+        else toast('Canción añadida al repertorio', 'success');
+        await loadData({ silent: true });
+      } catch (err) {
+        hideBusy();
+        toast('Error: ' + err.message, 'error');
+      }
     }
 
     /* ========== RENDER: PERFIL ========== */
@@ -2995,6 +3749,15 @@
           </div>
         `))) }
 
+        ${r.categoria === 'musica' ? `
+          <div class="detail-section" style="text-align:center;">
+            <button class="btn-ghost" id="addToRepBtn" style="font-size:13px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px; vertical-align:-3px; margin-right:6px;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              Añadir a un repertorio
+            </button>
+          </div>
+        ` : ''}
+
         <div class="detail-section">
           <h3>${isMine ? 'Reacciones' : '¿Qué te ha parecido?'}</h3>
           ${!isMine ? `
@@ -3055,7 +3818,7 @@
 
         ${valoraciones.length ? `
           <div class="detail-section">
-            <h3>Valoraciones de la familia</h3>
+            <h3>Valoraciones de los amigos</h3>
             ${valoraciones.map(v => {
               const usr = getUserBy(v.usuario);
               return `
@@ -3144,6 +3907,12 @@
             }
           });
         }
+      }
+
+      // Botón "Añadir a un repertorio" (solo aparece en recs musicales)
+      const addToRepBtn = document.getElementById('addToRepBtn');
+      if (addToRepBtn) {
+        addToRepBtn.addEventListener('click', () => openPickRepertorioModal(r.id));
       }
 
       const editBtn = document.getElementById('editRec');
@@ -3245,7 +4014,7 @@
                 <label class="form-label">¿Para quién es?</label>
                 <div class="recipient-row" id="editRecipientRow">${recipientPillsHTML}</div>
                 <span style="display:block; font-size:11px; color:var(--ink-soft); margin-top:4px;">
-                  Dejar vacío para que sea para toda la familia.
+                  Dejar vacío para que sea para todo el grupo.
                 </span>
               </div>
               <p style="font-size:12px; color:var(--ink-soft); margin: var(--s-2) 0 0;">
