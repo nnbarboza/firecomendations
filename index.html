@@ -1229,7 +1229,7 @@
 
         <div class="form-group optional" id="lugarGroup" style="display:none;">
           <label class="form-label" for="recLugar">
-            Lugar <span class="opt-tag">opcional</span>
+            <span id="lugarLabelText">Lugar</span> <span class="opt-tag" id="lugarOptional">opcional</span>
           </label>
           <input type="text" id="recLugar" class="form-input" placeholder="Ej: Madrid, WiZink Center">
         </div>
@@ -1601,9 +1601,43 @@
       'lh4.googleusercontent.com',
       'lh5.googleusercontent.com',
       'lh6.googleusercontent.com',
-      'maps.googleapis.com',
+      'maps.googleapis.com',       // Google Maps Static
       'places.googleapis.com',
     ];
+    
+    /* Key de Google Maps Static API. Restricciones: solo Maps Static API + referrer https://nnbarboza.github.io/* */
+    const MAPS_STATIC_KEY = 'AIzaSyA6W_KjGAq1GM0hXrVqKKkMbuuRirlGMec';
+    
+    /**
+     * Convierte el `imagen_url` del Sheet en una URL renderizable.
+     * 
+     * Casos:
+     *  - "geo:LAT,LNG" (restauración) → URL de Google Maps Static centrado en esas coords con pin
+     *  - URL http normal → se devuelve tal cual
+     *  - vacío o inválido → ''
+     * 
+     * Si el origen empieza con geo:, generamos un mapa estático con pin amarillo.
+     * El tamaño 400x400 es buen compromiso entre calidad retina y peso.
+     */
+    function resolveImageUrl(raw) {
+      if (!raw) return '';
+      if (typeof raw !== 'string') return '';
+      if (raw.startsWith('geo:')) {
+        const coords = raw.slice(4); // "41.39,2.16"
+        if (!/^[-\d.]+,[-\d.]+$/.test(coords)) return '';
+        const params = [
+          `center=${coords}`,
+          `zoom=16`,
+          `size=400x400`,
+          `scale=2`,
+          `markers=color:0xFFC857%7C${coords}`,
+          `key=${MAPS_STATIC_KEY}`,
+        ].join('&');
+        return `https://maps.googleapis.com/maps/api/staticmap?${params}`;
+      }
+      return raw;
+    }
+    
     function isTrustedImgUrl(url) {
       if (!url) return false;
       try {
@@ -1897,9 +1931,10 @@
       const cat = CATEGORIES[r.categoria] || { emoji: '⭐', color: 'peliculas', singular: r.categoria };
       const author = getUserBy(r.autor);
       const avg = getRecAvgRating(r.id);
-      const useImg = isTrustedImgUrl(r.imagen_url);
+      const resolvedImg = resolveImageUrl(r.imagen_url);
+      const useImg = isTrustedImgUrl(resolvedImg);
       const poster = useImg
-        ? `<div class="rec-poster-wrap"><img class="rec-poster" src="${escapeHTML(r.imagen_url)}" alt="" data-fallback="${cat.emoji}"></div>`
+        ? `<div class="rec-poster-wrap"><img class="rec-poster" src="${escapeHTML(resolvedImg)}" alt="" data-fallback="${cat.emoji}"></div>`
         : `<div class="rec-poster-ph">${cat.emoji}</div>`;
       const forMe = isRecForUser(r, state.currentUser) && r.autor !== state.currentUser;
       return `
@@ -1920,9 +1955,10 @@
       const cat = CATEGORIES[r.categoria] || { emoji: '⭐', color: 'peliculas', singular: r.categoria };
       const author = getUserBy(r.autor);
       const avg = getRecAvgRating(r.id);
-      const useImg = isTrustedImgUrl(r.imagen_url);
+      const resolvedImg = resolveImageUrl(r.imagen_url);
+      const useImg = isTrustedImgUrl(resolvedImg);
       const poster = useImg
-        ? `<img class="rec-poster" src="${escapeHTML(r.imagen_url)}" alt="" data-fallback="${cat.emoji}">`
+        ? `<img class="rec-poster" src="${escapeHTML(resolvedImg)}" alt="" data-fallback="${cat.emoji}">`
         : `<div class="rec-poster-ph">${cat.emoji}</div>`;
       const forMe = isRecForUser(r, state.currentUser) && r.autor !== state.currentUser;
       return `
@@ -2529,8 +2565,12 @@
         if (subcategoria === 'bar')        tituloInput.placeholder = 'Ej: Bar Cañete';
         else if (subcategoria === 'cafe')  tituloInput.placeholder = 'Ej: Satan\'s Coffee Corner';
         else                                tituloInput.placeholder = 'Ej: Disfrutar';
-        // Ubicación (reusamos lugarGroup, obligatorio para que Places encuentre el sitio correcto)
+        // Ubicación obligatoria (Places la necesita para encontrar el sitio correcto)
         lugarGroup.style.display = 'block';
+        const lugarLabelText = document.getElementById('lugarLabelText');
+        const lugarOptional = document.getElementById('lugarOptional');
+        if (lugarLabelText) lugarLabelText.textContent = 'Ubicación';
+        if (lugarOptional) lugarOptional.style.display = 'none';
         if (recLugar) recLugar.placeholder = 'Ej: Barcelona, Eixample';
         // Ocultar creador (lo rellena Places con la dirección)
         creadorGroup.style.display = 'none';
@@ -2607,6 +2647,13 @@
           creadorLabel.textContent = 'Artista';
           creadorInput.placeholder = 'Ej: Bad Bunny';
           lugarGroup.style.display = 'block';
+          // Asegurar que el label vuelva a "Lugar" con "opcional" (puede venir de restauración)
+          {
+            const lugarLabelText = document.getElementById('lugarLabelText');
+            const lugarOptional = document.getElementById('lugarOptional');
+            if (lugarLabelText) lugarLabelText.textContent = 'Lugar';
+            if (lugarOptional) lugarOptional.style.display = '';
+          }
           spotifyGroup.style.display = 'none';
           if (recSpotify) recSpotify.value = '';
           videoGroup.style.display = 'block';
@@ -2735,9 +2782,10 @@
 
       document.getElementById('recDetailMeta').textContent = `${cat.singular} · ${fmtDate(r.timestamp)}`;
 
-      const useImg = isTrustedImgUrl(r.imagen_url);
+      const resolvedImg = resolveImageUrl(r.imagen_url);
+      const useImg = isTrustedImgUrl(resolvedImg);
       const poster = useImg
-        ? `<img class="detail-poster" src="${escapeHTML(r.imagen_url)}" alt="" data-fallback="${cat.emoji}" data-fallback-class="detail-poster-ph">`
+        ? `<img class="detail-poster" src="${escapeHTML(resolvedImg)}" alt="" data-fallback="${cat.emoji}" data-fallback-class="detail-poster-ph">`
         : `<div class="detail-poster-ph">${cat.emoji}</div>`;
 
       // Trailer YouTube: para películas, series, música (todas las subcategorías)
