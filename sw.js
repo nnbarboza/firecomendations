@@ -1,4 +1,4 @@
-/* firecomendations Service Worker
+/* FIREcomendations Service Worker
  * Estrategia:
  *  - HTML/JS/CSS: network-first (siempre intenta lo último; si falla, usa caché)
  *  - Imágenes locales (img/...): cache-first (no se descargan 100 veces)
@@ -8,7 +8,7 @@
  * El cliente recibe un 'controllerchange' y muestra el toast de "nueva versión".
  */
 
-const CACHE_VERSION = 'firecomendations-v0.1';
+const CACHE_VERSION = 'firecomendations-v0.2';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const IMAGES_CACHE = `${CACHE_VERSION}-images`;
 
@@ -62,8 +62,6 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
 
   // Imágenes locales: stale-while-revalidate
-  // Devolvemos cache al instante (rápido), pero a la vez pedimos al server.
-  // Si el server tiene una versión nueva, queda cacheada para la próxima carga.
   if (isLocalImage(url)) {
     event.respondWith(
       caches.open(IMAGES_CACHE).then((cache) =>
@@ -74,7 +72,6 @@ self.addEventListener('fetch', (event) => {
             }
             return res;
           }).catch(() => cached);
-          // Si hay cache, devolver al instante; si no, esperar al fetch
           return cached || fetchPromise;
         })
       )
@@ -86,7 +83,6 @@ self.addEventListener('fetch', (event) => {
   if (isAppShell(url)) {
     event.respondWith(
       fetch(req).then((res) => {
-        // Cachear copia para uso offline
         if (res && res.status === 200) {
           const clone = res.clone();
           caches.open(STATIC_CACHE).then((cache) => cache.put(req, clone));
@@ -98,7 +94,6 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Resto (APIs externas, fonts, etc): pasar al network sin tocar
-  // No interceptar — el navegador lo gestiona normal
 });
 
 /* Mensajes desde la app (para skipWaiting on demand) */
