@@ -8,7 +8,7 @@
  * El cliente recibe un 'controllerchange' y muestra el toast de "nueva versión".
  */
 
-const CACHE_VERSION = 'firecomendations-v0.2';
+const CACHE_VERSION = 'firecomendations-v0.3';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const IMAGES_CACHE = `${CACHE_VERSION}-images`;
 

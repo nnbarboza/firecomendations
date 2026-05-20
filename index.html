@@ -608,6 +608,10 @@
     .react-btn[aria-pressed="true"].dislike {
       background: #FDECEA; border-color: var(--c-danger); color: var(--c-danger);
     }
+    .react-btn[aria-pressed="true"].interesa {
+      background: var(--c-restauracion-soft); border-color: #B8841A; color: #5C3E0A;
+    }
+    .react-btn.interesa svg { color: inherit; }
     .react-counts {
       display: flex; gap: var(--s-3) var(--s-4);
       flex-wrap: wrap;
@@ -712,6 +716,29 @@
       margin-bottom: var(--s-3);
     }
     
+    /* Chip toggleable Me interesan */
+    .interest-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--gray-200);
+      color: var(--ink-soft);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+    .interest-chip svg { width: 14px; height: 14px; }
+    .interest-chip.active {
+      background: var(--c-restauracion-soft);
+      border-color: #B8841A;
+      color: #5C3E0A;
+    }
+    
     /* ========== REPERTORIOS ========== */
     .rep-list { display: flex; flex-direction: column; gap: var(--s-3); }
     .rep-card {
@@ -807,7 +834,8 @@
       font-weight: 600;
       font-size: 14px;
       text-decoration: none;
-      margin-bottom: var(--s-4);
+      margin-top: var(--s-4);
+      margin-bottom: var(--s-3);
       transition: background .15s ease;
     }
     .rep-spotify-cta:active { background: #1aa44a; }
@@ -1602,7 +1630,7 @@
       <header class="screen-header">
         <div class="title-block">
           <h1>Amigos</h1>
-          <p>De Bermejo al mundo.</p>
+          <p>Porque un amigo es una luz brillando en la oscuridad.</p>
         </div>
       </header>
       <div class="familia-hero">
@@ -1718,7 +1746,7 @@
     /* ========== STATE ========== */
     const state = {
       currentUser: null,
-      data: { usuarios: [], recomendaciones: [], valoraciones: [], reacciones: [], consumido: [], repertorios: [], repertoriosItems: [] },
+      data: { usuarios: [], recomendaciones: [], valoraciones: [], reacciones: [], consumido: [], repertorios: [], repertoriosItems: [], intereses: [] },
       formNew: { categoria: null, subcategoria: null },
     };
 
@@ -1761,6 +1789,7 @@
         d.consumido        = d.consumido        || [];
         d.repertorios      = d.repertorios      || [];
         d.repertoriosItems = d.repertoriosItems || [];
+        d.intereses        = d.intereses        || [];
         return p;
       } catch { return null; }
     }
@@ -1782,11 +1811,12 @@
           consumido:        json.consumido || [],
           repertorios:      json.repertorios || [],
           repertoriosItems: json.repertoriosItems || [],
+          intereses:        json.intereses || [],
         };
         saveToCache(state.data);
       } catch (err) {
         if (!silent) toast('Sin conexión. Mostrando datos guardados.', 'error');
-        if (!cached) state.data = { usuarios: [], recomendaciones: [], valoraciones: [], reacciones: [], consumido: [], repertorios: [], repertoriosItems: [] };
+        if (!cached) state.data = { usuarios: [], recomendaciones: [], valoraciones: [], reacciones: [], consumido: [], repertorios: [], repertoriosItems: [], intereses: [] };
       }
     }
 
@@ -2093,15 +2123,21 @@
     }
     
     /**
-     * Cuenta no leídas por categoría (recs que no he abierto, no son mías).
+     * "Es nueva" = fue creada en los últimos 7 días y no es del usuario actual.
+     * Simplificación de v0.2: ya no usamos tracking de leídos (no era fiable).
      */
+    const NEW_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+    function isNewRec(rec) {
+      if (!rec || !rec.timestamp) return false;
+      if (state.currentUser && rec.autor === state.currentUser) return false;
+      const t = new Date(rec.timestamp).getTime();
+      if (isNaN(t)) return false;
+      return (Date.now() - t) < NEW_WINDOW_MS;
+    }
+    
     function unreadCountForCategory(categoria) {
-      if (!state.currentUser) return 0;
-      const read = getReadIds();
       return state.data.recomendaciones.filter(r =>
-        r.categoria === categoria &&
-        r.autor !== state.currentUser &&
-        !read.has(r.id)
+        r.categoria === categoria && isNewRec(r)
       ).length;
     }
     
@@ -2340,21 +2376,32 @@
       const c = CATEGORIES[cat];
       if (!c) { location.hash = '#/'; return; }
       const sortKey = state.categoriaSort || 'date';
+      const onlyInt = !!state.categoriaInteres;
       document.getElementById('catTitle').textContent = c.nombre;
       const allRecs = state.data.recomendaciones.filter(r => r.categoria === cat);
-      const recs = sortRecs(allRecs, sortKey);
+      const filtered = filterByInteres(allRecs, onlyInt);
+      const recs = sortRecs(filtered, sortKey);
       document.getElementById('catSubtitle').textContent =
-        recs.length === 1 ? '1 recomendación' : `${recs.length} recomendaciones`;
+        allRecs.length === 1 ? '1 recomendación' : `${allRecs.length} recomendaciones`;
       const list = document.getElementById('catList');
       const headerSlot = document.getElementById('categoriaHeaderActions');
-      if (!recs.length) {
+      if (!allRecs.length) {
         if (headerSlot) headerSlot.innerHTML = '';
         list.innerHTML = emptyStateHTML(c.emoji, 'Sin recomendaciones todavía', 'Sé el primero en recomendar algo aquí.');
         return;
       }
-      list.innerHTML = `<div class="rec-list">${recs.map(recListItemHTML).join('')}</div>`;
+      const interestRow = `<div style="margin-bottom: var(--s-3);">${interestChipHTML(onlyInt, 'categoria')}</div>`;
+      const emptyAfterFilter = !recs.length
+        ? `<p style="text-align:center; color:var(--ink-soft); padding: var(--s-4) var(--s-3); font-size:13px;">${onlyInt ? 'No tenés nada marcado como "Me interesa" aquí.' : 'No hay nada.'}</p>`
+        : `<div class="rec-list">${recs.map(recListItemHTML).join('')}</div>`;
+      list.innerHTML = interestRow + emptyAfterFilter;
       renderHeaderSort('categoriaHeaderActions', 'categoria', sortKey, (sort) => {
         state.categoriaSort = sort;
+        renderCategoria(cat);
+      });
+      const ic = document.getElementById('categoria-interest-chip');
+      if (ic) ic.addEventListener('click', () => {
+        state.categoriaInteres = !state.categoriaInteres;
         renderCategoria(cat);
       });
     }
@@ -2364,8 +2411,10 @@
       const filter = state.novedadesFilter || 'all';
       const sortKey = state.novedadesSort || 'date';
 
-      const allRecsRaw = [...state.data.recomendaciones];
-      const forMeRaw = recsForMe();
+      // Solo las de los últimos 7 días (ventana de "novedades")
+      const allRecsRaw = state.data.recomendaciones.filter(r => isNewRec(r) || r.autor === state.currentUser && (Date.now() - new Date(r.timestamp).getTime()) < NEW_WINDOW_MS);
+      // En "Para ti" solo aplicamos la misma ventana
+      const forMeRaw = recsForMe().filter(r => (Date.now() - new Date(r.timestamp).getTime()) < NEW_WINDOW_MS);
 
       // Aplicar filtro de categoría
       const allFiltered = filter === 'all' ? allRecsRaw : allRecsRaw.filter(r => r.categoria === filter);
@@ -2598,6 +2647,60 @@
       `;
     }
     
+    /**
+     * Chip toggleable "Me interesan" para filtrar listas.
+     * Cuando está activo, sólo se muestran las recs que el usuario tiene marcadas.
+     */
+    function interestChipHTML(active, idPrefix) {
+      return `
+        <button class="interest-chip ${active ? 'active' : ''}" id="${idPrefix}-interest-chip" type="button" aria-pressed="${!!active}">
+          <svg viewBox="0 0 24 24" fill="${active ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          Me interesan
+        </button>
+      `;
+    }
+    
+    function filterByInteres(recs, onlyInterested) {
+      if (!onlyInterested) return recs;
+      const myInt = getMyIntereses();
+      return recs.filter(r => myInt.has(r.id));
+    }
+    
+    /* ========== ME INTERESA ========== */
+    function isInteresada(recId, usuario) {
+      if (!recId || !usuario) return false;
+      return (state.data.intereses || []).some(i =>
+        String(i.recomendacion_id) === String(recId) && String(i.usuario) === String(usuario)
+      );
+    }
+    function getMyIntereses() {
+      if (!state.currentUser) return new Set();
+      return new Set(
+        (state.data.intereses || [])
+          .filter(i => String(i.usuario) === String(state.currentUser))
+          .map(i => i.recomendacion_id)
+      );
+    }
+    async function toggleInteresa(recId) {
+      if (!state.currentUser || !recId) return;
+      try {
+        const res = await apiGet('toggleInteresa', { recId, usuario: state.currentUser });
+        if (res.marked) toast('✨ Añadido a "Me interesa"', 'success');
+        else toast('Quitado de "Me interesa"', 'success');
+        await loadData({ silent: true });
+        // Re-render lo que sea visible
+        const { screen, param } = parseRoute(location.hash);
+        if (screen === 'rec') renderRecDetail(param);
+        else if (screen === 'categoria') renderCategoria(param);
+        else if (screen === 'perfil') renderPerfil();
+        else if (screen === 'novedades') renderNovedades();
+        else if (screen === 'home') renderHome();
+      } catch (err) {
+        toast('Error: ' + err.message, 'error');
+      }
+    }
+    window.toggleInteresa = toggleInteresa;
+    
     /* ========== REPERTORIOS ========== */
     
     /* Paleta de colores para cards: rota según hash del id para que cada repertorio tenga su propio look */
@@ -2691,7 +2794,6 @@
       const hasSpotify = !!rep.spotify_url;
       return `
         <a href="#/repertorio/${rep.id}" class="rep-card">
-          ${repCoverHTML(rep, 60)}
           <div class="rep-card-body">
             <div class="rep-card-title">${escapeHTML(rep.nombre)}</div>
             ${rep.descripcion ? `<div class="rep-card-desc">${escapeHTML(rep.descripcion)}</div>` : ''}
@@ -2751,18 +2853,12 @@
         : '';
       
       content.innerHTML = `
-        <div class="rep-detail-header">
-          ${repCoverHTML(rep, 80)}
-          <div class="rep-detail-info">
-            ${rep.descripcion ? `<p class="rep-detail-desc">${escapeHTML(rep.descripcion)}</p>` : ''}
-            <p class="rep-detail-meta">
-              ${author ? `Creado por ${escapeHTML(author.nombre)} · ` : ''}${tracks.length} ${tracks.length === 1 ? 'canción' : 'canciones'}
-            </p>
-          </div>
+        <div class="rep-detail-header" style="display:block;">
+          ${rep.descripcion ? `<p class="rep-detail-desc">${escapeHTML(rep.descripcion)}</p>` : ''}
+          <p class="rep-detail-meta">
+            ${author ? `Creado por ${escapeHTML(author.nombre)} · ` : ''}${tracks.length} ${tracks.length === 1 ? 'canción' : 'canciones'}
+          </p>
         </div>
-        
-        ${spotifyCTA}
-        ${spotifyEmbedHTML}
         
         <div class="rep-tracks-header">
           <h3>Canciones</h3>
@@ -2774,6 +2870,9 @@
         ${tracks.length === 0
           ? `<p style="text-align:center; color:var(--ink-soft); padding: var(--s-4) var(--s-3); font-size:13px;">Aún no hay canciones. Añade algunas desde el botón de arriba o desde el detalle de cualquier recomendación musical.</p>`
           : `<div class="rep-tracks-list">${tracks.map(t => trackItemHTML(t, canEdit, rep.id)).join('')}</div>`}
+        
+        ${spotifyCTA}
+        ${spotifyEmbedHTML}
       `;
       
       // Listeners
@@ -3148,6 +3247,14 @@
       const touchedFiltered = filterVal === 'all' ? touchedBase : touchedBase.filter(r => r.categoria === filterVal);
       const touchedRecs = sortRecs(touchedFiltered, sortVal);
       
+      // === Cálculos de "Me interesan" ===
+      const myInteresIds = getMyIntereses();
+      const interesBase = state.data.recomendaciones.filter(r => myInteresIds.has(r.id));
+      const filterInt = state.intFilter || 'all';
+      const sortInt   = state.intSort   || 'date';
+      const interesFiltered = filterInt === 'all' ? interesBase : interesBase.filter(r => r.categoria === filterInt);
+      const interesRecs = sortRecs(interesFiltered, sortInt);
+      
       // Subtítulo siempre con los contadores totales
       document.getElementById('perfilSubtitle').textContent =
         `${myRecsBase.length} recomendacion${myRecsBase.length === 1 ? '' : 'es'} · ${touchedBase.length} valoracion${touchedBase.length === 1 ? '' : 'es'}`;
@@ -3158,10 +3265,13 @@
       const tabsHTML = `
         <div class="profile-tabs" role="tablist">
           <button class="profile-tab" data-tab="recomendaciones" aria-selected="${tab === 'recomendaciones'}" role="tab">
-            Mis recomendaciones <span class="profile-tab-count">${myRecsBase.length}</span>
+            Mis recs <span class="profile-tab-count">${myRecsBase.length}</span>
           </button>
           <button class="profile-tab" data-tab="valoraciones" aria-selected="${tab === 'valoraciones'}" role="tab">
-            Mis valoraciones <span class="profile-tab-count">${touchedBase.length}</span>
+            Valoré <span class="profile-tab-count">${touchedBase.length}</span>
+          </button>
+          <button class="profile-tab" data-tab="interesan" aria-selected="${tab === 'interesan'}" role="tab">
+            Me interesan <span class="profile-tab-count">${interesBase.length}</span>
           </button>
         </div>
       `;
@@ -3181,7 +3291,7 @@
               : `<p style="text-align:center; color:var(--ink-soft); padding: var(--s-5) var(--s-3); font-size:14px;">No hay recomendaciones en esta categoría.</p>`}
           `;
         }
-      } else {
+      } else if (tab === 'valoraciones') {
         if (touchedBase.length === 0) {
           tabBody = emptyStateHTML('📖', 'Aún no has valorado nada', 'Cuando valores o marques recomendaciones como consumidas, aparecerán aquí.');
         } else {
@@ -3192,6 +3302,21 @@
             </div>
             ${touchedRecs.length
               ? `<div class="rec-list">${touchedRecs.map(recListItemHTML).join('')}</div>`
+              : `<p style="text-align:center; color:var(--ink-soft); padding: var(--s-5) var(--s-3); font-size:14px;">No hay nada en esta categoría aún.</p>`}
+          `;
+        }
+      } else {
+        // tab === 'interesan'
+        if (interesBase.length === 0) {
+          tabBody = emptyStateHTML('✨', 'Sin "Me interesa" todavía', 'Marca cualquier recomendación con "Me interesa" y aparecerá aquí hasta que la valores.');
+        } else {
+          tabBody = `
+            ${categoryFilterHTML(filterInt, 'int')}
+            <div class="sort-row-standalone">
+              ${sortDropdownHTML(sortInt, 'int')}
+            </div>
+            ${interesRecs.length
+              ? `<div class="rec-list">${interesRecs.map(recListItemHTML).join('')}</div>`
               : `<p style="text-align:center; color:var(--ink-soft); padding: var(--s-5) var(--s-3); font-size:14px;">No hay nada en esta categoría aún.</p>`}
           `;
         }
@@ -3207,12 +3332,11 @@
           </div>
         </div>
         
-        ${isUserAdmin ? `
-          <div style="margin-bottom: var(--s-4); display:flex; gap: var(--s-2); flex-wrap: wrap; justify-content:center;">
-            <button class="btn-ghost" onclick="logout()" style="font-size:13px;">🔄 Cambiar de usuario</button>
-            <button class="btn-ghost" onclick="downloadBackup()" style="font-size:13px;">💾 Backup JSON</button>
-          </div>
-        ` : ''}
+        <div style="margin-bottom: var(--s-4); display:flex; gap: var(--s-2); flex-wrap: wrap; justify-content:center;">
+          <button class="btn-ghost" onclick="logout()" style="font-size:13px;">🔄 Cambiar de usuario</button>
+          <button class="btn-ghost" onclick="forceAppReset()" style="font-size:13px;">♻️ Forzar actualización</button>
+          ${isUserAdmin ? `<button class="btn-ghost" onclick="downloadBackup()" style="font-size:13px;">💾 Backup JSON</button>` : ''}
+        </div>
         
         ${tabsHTML}
         <div class="profile-tab-body">
@@ -3244,7 +3368,7 @@
           state.perfilSort = sort;
           renderPerfil();
         });
-      } else {
+      } else if (tab === 'valoraciones') {
         content.querySelectorAll('#val-filter .cat-filter-btn').forEach(btn => {
           btn.addEventListener('click', () => {
             state.valFilter = btn.dataset.cat;
@@ -3253,6 +3377,18 @@
         });
         bindSortDropdown('val', (sort) => {
           state.valSort = sort;
+          renderPerfil();
+        });
+      } else {
+        // tab === 'interesan'
+        content.querySelectorAll('#int-filter .cat-filter-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.intFilter = btn.dataset.cat;
+            renderPerfil();
+          });
+        });
+        bindSortDropdown('int', (sort) => {
+          state.intSort = sort;
           renderPerfil();
         });
       }
@@ -3308,6 +3444,7 @@
       }
     }
     window.downloadBackup = downloadBackup;
+    window.forceAppReset = forceAppReset;
 
     /* ========== RENDER: RECOMENDAR ========== */
     function renderRecomendar() {
@@ -3816,6 +3953,10 @@
                 <svg viewBox="0 0 24 24" fill="${myReaction?.tipo === 'dislike' ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:scaleY(-1)"><path d="M7 11v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3M14 9V5a3 3 0 0 0-6 0v6h2l-1 8h7a3 3 0 0 0 3-3v-5a3 3 0 0 0-3-3z"/></svg>
                 No me gustó
               </button>
+              <button class="react-btn interesa ${isInteresada(r.id, state.currentUser) ? 'active' : ''}" type="button" onclick="toggleInteresa('${r.id}')" aria-pressed="${isInteresada(r.id, state.currentUser)}">
+                <svg viewBox="0 0 24 24" fill="${isInteresada(r.id, state.currentUser) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                ${isInteresada(r.id, state.currentUser) ? 'Me interesa' : 'Me interesa'}
+              </button>
             </div>
           ` : ''}
           ${(likes.length || dislikes.length) ? `
@@ -4297,7 +4438,11 @@
     /* ========== SERVICE WORKER (auto-update) ========== */
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/firecomendations/sw.js', { scope: '/firecomendations/' })
+        navigator.serviceWorker.register('/firecomendations/sw.js', {
+          scope: '/firecomendations/',
+          // CRÍTICO: evita que el navegador cachee el sw.js por HTTP (causa raíz de "no se actualiza")
+          updateViaCache: 'none',
+        })
           .then((reg) => {
             // Si ya hay un SW esperando al cargar la app, mostrar toast
             if (reg.waiting && navigator.serviceWorker.controller) {
@@ -4314,8 +4459,16 @@
                 }
               });
             });
-            // Chequear updates periódicamente (cada 30 min mientras la pestaña está abierta)
-            setInterval(() => reg.update().catch(() => {}), 30 * 60 * 1000);
+            // Chequear updates periódicamente (cada 5 min mientras la pestaña está abierta)
+            setInterval(() => reg.update().catch(() => {}), 5 * 60 * 1000);
+            // Chequear update cada vez que la pestaña vuelve al foco (clave para iOS)
+            document.addEventListener('visibilitychange', () => {
+              if (document.visibilityState === 'visible') {
+                reg.update().catch(() => {});
+              }
+            });
+            // Exponer la registración para el botón "Forzar actualización" del perfil
+            window.__swReg = reg;
           })
           .catch((err) => console.warn('SW registration failed:', err));
 
@@ -4327,6 +4480,33 @@
           window.location.reload();
         });
       });
+    }
+    
+    /**
+     * Forzar reset manual del cache. Llamable desde un botón.
+     * Desregistra TODOS los SW, borra TODOS los caches, limpia localStorage relevante y recarga.
+     */
+    async function forceAppReset() {
+      try {
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          for (const r of regs) {
+            try { await r.unregister(); } catch {}
+          }
+        }
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          for (const k of keys) {
+            try { await caches.delete(k); } catch {}
+          }
+        }
+        try { localStorage.removeItem(CACHE_KEY); } catch {}
+      } catch (e) {
+        console.warn('forceAppReset error', e);
+      } finally {
+        // Recargar bypaseando el cache HTTP del navegador
+        location.replace(location.pathname + '?_=' + Date.now());
+      }
     }
 
     function showUpdateToast(worker) {
