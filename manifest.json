@@ -1,6 +1,6 @@
 {
-  "name": "FIREcomendations",
-  "short_name": "FIREcomendations",
+  "name": "BROmendations",
+  "short_name": "BROmendations",
   "description": "Recomendaciones culturales entre amigos",
   "start_url": "/firecomendations/",
   "scope": "/firecomendations/",

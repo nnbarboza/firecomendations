@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#FFF7ED">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="FIREcomendations">
+  <meta name="apple-mobile-web-app-title" content="BROmendations">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="img/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="img/icon-512.png">
@@ -14,9 +14,9 @@
   <link rel="apple-touch-icon" sizes="192x192" href="img/icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="FIREcomendations">
+  <meta name="apple-mobile-web-app-title" content="BROmendations">
   <base href="/firecomendations/">
-  <title>FIREcomendations</title>
+  <title>BROmendations</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -89,11 +89,12 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .home-header { position: relative; padding-right: 96px; margin-bottom: var(--s-5); }
+    .home-header { position: relative; margin-bottom: var(--s-5); }
     .home-header h1 {
       font-family: var(--font-display); font-weight: 700;
       font-size: 36px; line-height: 1.1;
       margin: 0 0 var(--s-3); letter-spacing: -0.5px;
+      padding-right: 96px;
     }
     .home-header .wave {
       display: inline-block; transform-origin: 70% 70%;
@@ -559,29 +560,38 @@
     }
     .interesa-fab {
       position: absolute;
-      top: 10px;
+      bottom: 10px;
       right: 10px;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
+      height: 32px;
+      padding: 0 10px;
+      border-radius: 999px;
       background: rgba(255,255,255,0.92);
       backdrop-filter: blur(6px);
       border: 1px solid var(--gray-200);
       color: var(--ink-soft);
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
+      gap: 6px;
       cursor: pointer;
       transition: all .15s ease;
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
       z-index: 2;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
     }
-    .interesa-fab svg { width: 18px; height: 18px; }
-    .interesa-fab:active { transform: scale(0.92); }
+    .interesa-fab svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .interesa-fab-label { line-height: 1; }
+    .interesa-fab:active { transform: scale(0.95); }
     .interesa-fab.active {
       background: var(--c-restauracion-soft);
       border-color: #B8841A;
       color: #5C3E0A;
+    }
+    @media (hover: hover) {
+      .interesa-fab:hover { background: rgba(255,255,255,1); border-color: var(--gray-300); }
+      .interesa-fab.active:hover { background: #FFE7A8; }
     }
     .detail-poster, .detail-poster-ph {
       width: 110px; aspect-ratio: 2/3;
@@ -1429,7 +1439,7 @@
 
   <div class="splash" id="splash">
     <div class="splash-content">
-      <h1><span class="accent">FIREcomendations</span></h1>
+      <h1><span class="accent">BROmendations</span></h1>
       <div class="splash-spinner"></div>
     </div>
   </div>
@@ -1462,7 +1472,7 @@
 
   <div class="user-picker" id="userPicker">
     <div class="user-picker-inner">
-      <h1><span class="accent">FIREcomendations</span></h1>
+      <h1><span class="accent">BROmendations</span></h1>
       <p>¿Quién eres?</p>
       <div class="user-grid" id="userGrid"></div>
     </div>
@@ -1668,7 +1678,7 @@
       </div>
       <div id="bromendatorsList"></div>
       <footer class="familia-credits">
-        <p>FIREcomendations© 2026 · v<span id="familiaVersion">0.1</span></p>
+        <p>BROmendations© 2026 · v<span id="familiaVersion">0.1</span></p>
         <p>Diseñada y desarrollada en Barcelona por Nico con 🔥</p>
       </footer>
     </section>
@@ -1824,26 +1834,64 @@
     }
 
     /* ========== LOAD ========== */
-    async function loadData({ silent = false } = {}) {
-      const cached = loadFromCache();
-      if (cached && cached.data) state.data = cached.data;
-      try {
-        const json = await apiGet('getAll');
-        state.data = {
-          usuarios:         json.usuarios || [],
-          recomendaciones:  json.recomendaciones || [],
-          valoraciones:     json.valoraciones || [],
-          reacciones:       json.reacciones || [],
-          consumido:        json.consumido || [],
-          repertorios:      json.repertorios || [],
-          repertoriosItems: json.repertoriosItems || [],
-          intereses:        json.intereses || [],
-        };
-        saveToCache(state.data);
-      } catch (err) {
-        if (!silent) toast('Sin conexión. Mostrando datos guardados.', 'error');
-        if (!cached) state.data = { usuarios: [], recomendaciones: [], valoraciones: [], reacciones: [], consumido: [], repertorios: [], repertoriosItems: [], intereses: [] };
+    /**
+     * loadData con caché en memoria + TTL.
+     * - {force:true} ignora el TTL y siempre va al backend
+     * - {silent:true} no muestra toast si falla la red
+     * - Si la última carga fue hace menos de FRESH_TTL_MS, devuelve sin llamar al backend.
+     */
+    const FRESH_TTL_MS = 8000;  // 8s: si llamamos varias veces seguidas, no martillamos el backend
+    let _lastLoadTs = 0;
+    let _loadInFlight = null;
+    
+    async function loadData({ silent = false, force = false } = {}) {
+      const now = Date.now();
+      // Si hay una carga en curso, devolvemos esa misma promesa para no duplicar
+      if (_loadInFlight) return _loadInFlight;
+      // Si los datos son fresquísimos y no es forzado, no recargamos
+      if (!force && _lastLoadTs && (now - _lastLoadTs) < FRESH_TTL_MS) {
+        return Promise.resolve();
       }
+      // Si nunca cargamos, intentar usar cache local del SO mientras llamamos
+      if (!_lastLoadTs) {
+        const cached = loadFromCache();
+        if (cached && cached.data) state.data = cached.data;
+      }
+      _loadInFlight = (async () => {
+        try {
+          const json = await apiGet('getAll');
+          state.data = {
+            usuarios:         json.usuarios || [],
+            recomendaciones:  json.recomendaciones || [],
+            valoraciones:     json.valoraciones || [],
+            reacciones:       json.reacciones || [],
+            consumido:        json.consumido || [],
+            repertorios:      json.repertorios || [],
+            repertoriosItems: json.repertoriosItems || [],
+            intereses:        json.intereses || [],
+          };
+          saveToCache(state.data);
+          _lastLoadTs = Date.now();
+        } catch (err) {
+          if (!silent) toast('Sin conexión. Mostrando datos guardados.', 'error');
+          if (!_lastLoadTs) {
+            state.data = { usuarios: [], recomendaciones: [], valoraciones: [], reacciones: [], consumido: [], repertorios: [], repertoriosItems: [], intereses: [] };
+          }
+        } finally {
+          _loadInFlight = null;
+        }
+      })();
+      return _loadInFlight;
+    }
+    
+    /**
+     * Sincronización en background después de una mutación.
+     * No bloquea el render; el UI sigue siendo responsive mientras el backend confirma.
+     */
+    function syncInBackground() {
+      // Marcamos que la próxima loadData debe ir al backend, no usar el TTL
+      _lastLoadTs = 0;
+      loadData({ silent: true, force: true });
     }
 
     /* ========== UTILS ========== */
@@ -2743,7 +2791,7 @@
       } catch (err) {
         // Si falla, revertir
         toast('Error: ' + err.message, 'error');
-        await loadData({ silent: true });
+        await loadData({ force: true, silent: true });
         if (screen === 'rec') renderRecDetail(param);
         else if (screen === 'categoria') renderCategoria(param);
         else if (screen === 'perfil') renderPerfil();
@@ -3009,7 +3057,7 @@
         hideBusy();
         closeModal();
         toast('Repertorio creado', 'success');
-        await loadData({ silent: true });
+        await loadData({ silent: true, force: true });
         // Navegar al detalle
         if (res.id) location.hash = `#/repertorio/${res.id}`;
       } catch (err) {
@@ -3055,7 +3103,7 @@
         hideBusy();
         closeModal();
         toast('Repertorio actualizado', 'success');
-        await loadData({ silent: true });
+        await loadData({ silent: true, force: true });
         renderRepertorioDetail(repId);
       } catch (err) {
         hideBusy();
@@ -3106,7 +3154,7 @@
         hideBusy();
         closeModal();
         toast('Repertorio borrado', 'success');
-        await loadData({ silent: true });
+        await loadData({ silent: true, force: true });
         location.hash = '#/repertorios';
       } catch (err) {
         hideBusy();
@@ -3186,7 +3234,7 @@
         } else {
           toast('Canción añadida', 'success');
         }
-        await loadData({ silent: true });
+        await loadData({ silent: true, force: true });
         renderRepertorioDetail(repId);
       } catch (err) {
         hideBusy();
@@ -3201,7 +3249,7 @@
         await apiGet('removeFromRepertorio', { repertorioId: repId, recId });
         hideBusy();
         toast('Quitada', 'success');
-        await loadData({ silent: true });
+        await loadData({ silent: true, force: true });
         renderRepertorioDetail(repId);
       } catch (err) {
         hideBusy();
@@ -3260,7 +3308,7 @@
         closeModal();
         if (res.skipped) toast('Ya estaba en ese repertorio', 'success');
         else toast('Canción añadida al repertorio', 'success');
-        await loadData({ silent: true });
+        await loadData({ silent: true, force: true });
       } catch (err) {
         hideBusy();
         toast('Error: ' + err.message, 'error');
@@ -3847,7 +3895,7 @@
           dirigido_a,
         });
         toast(dirigido_a ? '¡Compartida! Avisaremos a los destinatarios 🔔' : '¡Recomendación compartida! 🎉', 'success');
-        await loadData({ silent: true });
+        await loadData({ silent: true, force: true });
         hideBusy();
         location.hash = res.id ? `#/rec/${res.id}` : '#/';
       } catch (err) {
@@ -3919,8 +3967,9 @@
         <div class="detail-hero">
           ${poster}
           ${!isMine ? `
-            <button class="interesa-fab ${isInteresada(r.id, state.currentUser) ? 'active' : ''}" type="button" id="interesa-fab" aria-label="Me interesa" aria-pressed="${isInteresada(r.id, state.currentUser)}">
+            <button class="interesa-fab ${isInteresada(r.id, state.currentUser) ? 'active' : ''}" type="button" id="interesa-fab" aria-label="${isInteresada(r.id, state.currentUser) ? 'Ya no me interesa' : 'Me interesa'}" aria-pressed="${isInteresada(r.id, state.currentUser)}">
               <svg viewBox="0 0 24 24" fill="${isInteresada(r.id, state.currentUser) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              <span class="interesa-fab-label">${isInteresada(r.id, state.currentUser) ? 'Ya no me interesa' : 'Me interesa'}</span>
             </button>
           ` : ''}
           <div class="detail-info">
@@ -4089,12 +4138,39 @@
           const tipo = btn.dataset.react;
           const current = getMyReaction(r.id);
           const newTipo = (current && current.tipo === tipo) ? 'none' : tipo;
+          
+          // Optimistic update: actualizar reacciones locales
+          const arr = state.data.reacciones || [];
+          const myIdx = arr.findIndex(x => x.recomendacion_id === r.id && x.usuario === state.currentUser);
+          if (newTipo === 'none') {
+            if (myIdx !== -1) arr.splice(myIdx, 1);
+          } else if (myIdx !== -1) {
+            arr[myIdx] = { ...arr[myIdx], tipo: newTipo, timestamp: new Date().toISOString() };
+          } else {
+            arr.push({
+              id: 'tmp_' + Date.now(),
+              recomendacion_id: r.id,
+              usuario: state.currentUser,
+              tipo: newTipo,
+              timestamp: new Date().toISOString(),
+            });
+          }
+          // Si reaccionamos con like/dislike (no none), también quitamos el "me interesa" local
+          if (newTipo !== 'none') {
+            const ints = state.data.intereses || [];
+            const intIdx = ints.findIndex(i => i.recomendacion_id === r.id && i.usuario === state.currentUser);
+            if (intIdx !== -1) ints.splice(intIdx, 1);
+          }
+          renderRecDetail(r.id);
+          
+          // Background sync
           try {
             await apiGet('reactRec', { recId: r.id, usuario: state.currentUser, tipo: newTipo });
-            await loadData({ silent: true });
-            renderRecDetail(r.id);
+            syncInBackground();
           } catch (err) {
             toast('Error: ' + err.message, 'error');
+            await loadData({ force: true, silent: true });
+            renderRecDetail(r.id);
           }
         });
       });
@@ -4118,6 +4194,41 @@
             const comentario = document.getElementById('ratingComment').value.trim();
             saveBtn.disabled = true;
             saveBtn.textContent = 'Guardando...';
+            
+            // Optimistic update local: actualizar valoraciones + consumido + quitar interés
+            const vals = state.data.valoraciones || [];
+            const vIdx = vals.findIndex(v => v.recomendacion_id === r.id && v.usuario === state.currentUser);
+            if (vIdx !== -1) {
+              vals[vIdx] = { ...vals[vIdx], estrellas: pendingStars, comentario, timestamp: new Date().toISOString() };
+            } else {
+              vals.push({
+                id: 'tmp_' + Date.now(),
+                recomendacion_id: r.id,
+                usuario: state.currentUser,
+                estrellas: pendingStars,
+                comentario,
+                timestamp: new Date().toISOString(),
+              });
+            }
+            const cons = state.data.consumido || [];
+            if (!cons.find(c => c.recomendacion_id === r.id && c.usuario === state.currentUser)) {
+              cons.push({
+                id: 'tmp_' + Date.now(),
+                recomendacion_id: r.id,
+                usuario: state.currentUser,
+                timestamp: new Date().toISOString(),
+              });
+            }
+            // Quitar interés si estaba
+            const ints = state.data.intereses || [];
+            const intIdx = ints.findIndex(i => i.recomendacion_id === r.id && i.usuario === state.currentUser);
+            if (intIdx !== -1) ints.splice(intIdx, 1);
+            
+            toast('Valoración guardada ⭐', 'success');
+            renderRecDetail(r.id);
+            updateBell();
+            
+            // Background sync
             try {
               await apiGet('rateRec', {
                 recId: r.id,
@@ -4125,12 +4236,11 @@
                 estrellas: pendingStars,
                 comentario,
               });
-              toast('Valoración guardada ⭐', 'success');
-              await loadData({ silent: true });
-              updateBell();
-              renderRecDetail(r.id);
+              syncInBackground();
             } catch (err) {
               toast('Error: ' + err.message, 'error');
+              await loadData({ force: true, silent: true });
+              renderRecDetail(r.id);
               saveBtn.disabled = false;
             }
           });
@@ -4140,14 +4250,26 @@
         if (delBtn) {
           delBtn.addEventListener('click', async () => {
             if (!confirm('¿Borrar tu valoración?')) return;
+            
+            // Optimistic update
+            const vals = state.data.valoraciones || [];
+            const vIdx = vals.findIndex(v => v.recomendacion_id === r.id && v.usuario === state.currentUser);
+            if (vIdx !== -1) vals.splice(vIdx, 1);
+            const cons = state.data.consumido || [];
+            const cIdx = cons.findIndex(c => c.recomendacion_id === r.id && c.usuario === state.currentUser);
+            if (cIdx !== -1) cons.splice(cIdx, 1);
+            
+            toast('Borrada', 'success');
+            renderRecDetail(r.id);
+            updateBell();
+            
             try {
               await apiGet('deleteRating', { recId: r.id, usuario: state.currentUser });
-              toast('Borrada', 'success');
-              await loadData({ silent: true });
-              updateBell();
-              renderRecDetail(r.id);
+              syncInBackground();
             } catch (err) {
               toast('Error: ' + err.message, 'error');
+              await loadData({ force: true, silent: true });
+              renderRecDetail(r.id);
             }
           });
         }
@@ -4335,7 +4457,7 @@
 
                 hideBusy();
                 toast(shouldReEnrich ? 'Actualizada ✨' : 'Actualizada ✏️', 'success');
-                await loadData({ silent: true });
+                await loadData({ silent: true, force: true });
                 renderRecDetail(r.id);
               } catch (err) {
                 hideBusy();
@@ -4373,7 +4495,7 @@
               showBusy('Borrando recomendación…', 'Un momento por favor');
               try {
                 await apiGet('deleteRec', { id: r.id });
-                await loadData({ silent: true });
+                await loadData({ silent: true, force: true });
                 hideBusy();
                 toast('Borrada', 'success');
                 location.hash = '#/';
@@ -4414,7 +4536,7 @@
               try {
                 await apiGet('reEnrich', { recId: r.id, detalles: detalles || '' });
                 toast('Información regenerada ✨', 'success');
-                await loadData({ silent: true });
+                await loadData({ silent: true, force: true });
                 renderRecDetail(r.id);
               } catch (err) {
                 toast('Error: ' + err.message, 'error');
@@ -4430,7 +4552,7 @@
       if (r.estado_enriquecimiento === 'enriqueciendo' || r.estado_enriquecimiento === 'pendiente') {
         if (window._enrichPoll) clearTimeout(window._enrichPoll);
         window._enrichPoll = setTimeout(async () => {
-          await loadData({ silent: true });
+          await loadData({ silent: true, force: true });
           const { screen, param } = parseRoute(location.hash);
           if (screen === 'rec' && param === r.id) {
             renderRecDetail(r.id);
@@ -4450,7 +4572,7 @@
         if (stored) state.currentUser = stored;
       }
 
-      await loadData();
+      await loadData({ force: true });
 
       if (state.currentUser && !getUserBy(state.currentUser)) {
         state.currentUser = null;
@@ -4472,7 +4594,12 @@
 
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible' && state.currentUser) {
-        loadData({ silent: true }).then(() => navigate());
+        // Navegar inmediatamente con los datos en memoria; loadData corre en background
+        navigate();
+        loadData({ silent: true }).then(() => {
+          // Si los datos cambiaron, re-render de la screen actual
+          navigate();
+        });
       }
     });
 
