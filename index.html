@@ -783,6 +783,115 @@
       color: #5C3E0A;
     }
     
+    /* ========== COLECCIONES ========== */
+    .col-list { display: flex; flex-direction: column; gap: var(--s-3); }
+    .col-card {
+      display: block;
+      background: var(--surface);
+      border-radius: 18px;
+      padding: var(--s-4);
+      box-shadow: var(--shadow-soft);
+      border-left: 5px solid var(--gray-100);
+    }
+    .col-card.peliculas    { border-left-color: var(--c-peliculas); }
+    .col-card.series       { border-left-color: var(--c-series); }
+    .col-card.musica       { border-left-color: var(--c-musica); }
+    .col-card.restauracion { border-left-color: var(--c-restauracion); }
+    .col-card-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+    .col-card h3 {
+      font-family: var(--font-display);
+      font-size: 19px; margin: 0 0 6px; color: var(--ink);
+      line-height: 1.25;
+    }
+    .col-card-meta { font-size: 12px; color: var(--ink-soft); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .col-state {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em;
+      padding: 3px 8px; border-radius: 999px;
+      white-space: nowrap;
+    }
+    .col-state.abierta  { background: rgba(107,164,255,.16); color: #14306B; }
+    .col-state.votacion { background: rgba(255,200,87,.25);  color: #5C3E0A; }
+    .col-state.cerrada  { background: rgba(0,0,0,.07);       color: var(--ink-soft); }
+    .col-state.tuya     { background: rgba(255,138,128,.2);  color: #4A1D19; }
+
+    .col-progress { height: 6px; border-radius: 999px; background: var(--gray-100); overflow: hidden; margin-top: var(--s-3); }
+    .col-progress span { display: block; height: 100%; background: var(--c-action); border-radius: 999px; transition: width .3s ease; }
+
+    /* Opciones dentro de una colección */
+    .opt-list { display: flex; flex-direction: column; gap: var(--s-2); }
+    .opt-row {
+      display: flex; align-items: center; gap: var(--s-3);
+      width: 100%; text-align: left;
+      background: var(--surface);
+      border: 2px solid var(--gray-100);
+      border-radius: 16px;
+      padding: var(--s-3);
+      cursor: pointer;
+      transition: border-color .12s ease, background .12s ease;
+    }
+    .opt-row[aria-pressed="true"] { border-color: var(--c-action); background: rgba(0,0,0,0.02); }
+    .opt-row.ganadora { border-color: #D4A017; background: rgba(255,200,87,.12); }
+    .opt-row.mia { border-style: dashed; }
+    .opt-poster { width: 48px; height: 64px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: var(--gray-100); }
+    .opt-poster-ph {
+      width: 48px; height: 64px; border-radius: 10px; flex-shrink: 0;
+      background: var(--gray-100);
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+    }
+    .opt-body { flex: 1; min-width: 0; }
+    .opt-title { font-weight: 700; font-size: 14px; color: var(--ink); line-height: 1.3; }
+    .opt-by { font-size: 11px; color: var(--ink-soft); margin-top: 3px; display: flex; align-items: center; gap: 5px; }
+    .opt-votes {
+      flex-shrink: 0; text-align: center; min-width: 42px;
+    }
+    .opt-votes .n { font-family: var(--font-display); font-size: 20px; line-height: 1; color: var(--ink); }
+    .opt-votes .l { font-size: 9px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .04em; }
+    .opt-crown { font-size: 18px; }
+
+    .col-banner {
+      border-radius: 16px; padding: var(--s-3) var(--s-4);
+      font-size: 13px; line-height: 1.45;
+      margin-bottom: var(--s-4);
+    }
+    .col-banner.info  { background: rgba(107,164,255,.12); color: #14306B; }
+    .col-banner.warn  { background: rgba(255,200,87,.2);   color: #5C3E0A; }
+    .col-banner.win   { background: rgba(255,200,87,.22);  color: #5C3E0A; }
+    .col-banner strong { font-weight: 800; }
+
+    .wa-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      background: #25D366; color: #fff;
+      border: 0; border-radius: 999px;
+      padding: 12px 20px; font-size: 14px; font-weight: 700;
+      cursor: pointer; width: 100%;
+    }
+    .wa-btn svg { width: 18px; height: 18px; }
+
+    /* Tabla de puntos */
+    .puntos-row {
+      display: flex; align-items: center; gap: var(--s-3);
+      padding: var(--s-3) 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .puntos-row:last-child { border-bottom: 0; }
+    .puntos-pos { width: 22px; text-align: center; font-family: var(--font-display); font-size: 16px; color: var(--ink-soft); }
+    .puntos-name { flex: 1; font-weight: 600; font-size: 14px; }
+    .puntos-n { font-family: var(--font-display); font-size: 20px; color: var(--ink); }
+
+    /* Favoritos del perfil */
+    .fav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-2); }
+    .fav-item {
+      background: var(--surface-2, rgba(0,0,0,0.02));
+      border-radius: 14px; padding: var(--s-3);
+      min-width: 0;
+    }
+    .fav-item.wide { grid-column: 1 / -1; }
+    .fav-label { font-size: 10px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-soft); font-weight: 700; }
+    .fav-value { font-size: 14px; color: var(--ink); margin-top: 3px; font-weight: 600; word-break: break-word; }
+    .fav-value.empty { color: var(--ink-soft); font-weight: 400; font-style: italic; }
+    .fav-quote { font-family: var(--font-display); font-size: 16px; line-height: 1.35; }
+
     /* ========== ROBFLIX ==========
        Marca "esta peli esta en el Plex del grupo". Solo aplica a peliculas. */
     .robflix-badge {
@@ -1362,6 +1471,29 @@
       <div class="recs-carousel" id="recsRow"></div>
     </section>
 
+    <section class="screen" id="screen-colecciones">
+      <header class="screen-header">
+        <div class="title-block">
+          <h1>Colecciones</h1>
+          <p id="coleccionesSubtitle">Temas que propone el grupo</p>
+        </div>
+        <div class="header-actions" id="coleccionesHeaderActions"></div>
+      </header>
+      <div id="coleccionesContent"></div>
+    </section>
+
+    <section class="screen" id="screen-coleccion">
+      <header class="screen-header">
+        <button class="back-btn" onclick="history.back()" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <div class="title-block">
+          <h1 id="coleccionTitle">Colección</h1>
+          <p id="coleccionMeta"></p>
+        </div>
+        <div class="header-actions" id="coleccionHeaderActions"></div>
+      </header>
+      <div id="coleccionContent"></div>
+    </section>
+
     <section class="screen" id="screen-recomendar">
       <header class="screen-header">
         <div class="title-block">
@@ -1551,9 +1683,9 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg>
       Inicio
     </a>
-    <a href="#/novedades" class="nav-item" data-screen="novedades">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      Novedades
+    <a href="#/colecciones" class="nav-item" data-screen="colecciones">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="19" cy="17" r="2.5"/></svg>
+      Colecciones
       <span class="nav-dot" id="navDot" style="display:none;"></span>
     </a>
     <div class="nav-cta">
@@ -1574,7 +1706,7 @@
 
   <script>
     /* ========== CONFIG ========== */
-    const APP_VERSION = '0.5.0';
+    const APP_VERSION = '0.6.0';
     const API_URL = 'https://script.google.com/macros/s/AKfycbzoW8tEDotBHSg9c6e-5rbUePYQR0c3xuIf-Efh4iGIQQFWbv2nV3egIGcsjqeFh3WDew/exec';
 
     const CATEGORIES = {
@@ -1587,7 +1719,7 @@
     /* ========== STATE ========== */
     const state = {
       currentUser: null,
-      data: { usuarios: [], recomendaciones: [], valoraciones: [], reacciones: [], consumido: [], intereses: [] },
+      data: { usuarios: [], recomendaciones: [], valoraciones: [], reacciones: [], consumido: [], intereses: [], colecciones: [], coleccionItems: [], coleccionVotos: [] },
       formNew: { categoria: null, subcategoria: null },
     };
 
@@ -1629,7 +1761,8 @@
     const CACHE_KEY = 'br_data_cache_v1';
     /* Unico sitio donde se decide que tablas existen. Si el backend no manda una,
        se rellena con [] en vez de dejar un undefined que mata la app entera. */
-    const TABLAS = ['usuarios', 'recomendaciones', 'valoraciones', 'reacciones', 'consumido', 'intereses'];
+    const TABLAS = ['usuarios', 'recomendaciones', 'valoraciones', 'reacciones', 'consumido', 'intereses',
+                    'colecciones', 'coleccionItems', 'coleccionVotos'];
     function normalizar(d) {
       const out = {};
       const src = d || {};
@@ -2030,8 +2163,10 @@
         dot.style.display = n > 0 ? 'flex' : 'none';
         dot.textContent = n > 9 ? '9+' : n;
       }
+      // El punto del nav es de Colecciones (cosas que esperan algo mío),
+      // no de Novedades: Novedades vive en la campana del home.
       const navDot = document.getElementById('navDot');
-      if (navDot) navDot.style.display = n > 0 ? 'block' : 'none';
+      if (navDot) navDot.style.display = coleccionesPendientes().length > 0 ? 'block' : 'none';
     }
 
     function unreadCountForCategory(categoria) {
@@ -2201,6 +2336,8 @@
         case 'perfil':       renderPerfil(); break;
         case 'categoria':    renderCategoria(param); break;
         case 'novedades':    renderNovedades(); break;
+        case 'colecciones':  renderColecciones(); break;
+        case 'coleccion':    renderColeccion(param); break;
         case 'rec':          renderRecDetail(param); break;
         case 'bromendator':  renderBromendator(param); break;
       }
@@ -2306,7 +2443,15 @@
       const emptyAfterFilter = !recs.length
         ? `<p style="text-align:center; color:var(--ink-soft); padding: var(--s-4) var(--s-3); font-size:13px;">${onlyRob && !onlyInt ? 'Ninguna de estas está en Robflix todavía.' : (onlyInt ? 'No tenés nada marcado como "Me interesa" aquí.' : 'No hay nada.')}</p>`
         : `<div class="rec-list">${recs.map(recListItemHTML).join('')}</div>`;
-      list.innerHTML = interestRow + emptyAfterFilter;
+      const colsCerradas = coleccionesDeCategoria(cat);
+      const colsHTML = colsCerradas.length ? `
+        <div class="section-head" style="margin: var(--s-4) 0 var(--s-3);">
+          <h2 style="font-size:18px;">🗂️ Colecciones</h2>
+          <a href="#/colecciones">Ver todas</a>
+        </div>
+        <div class="col-list" style="margin-bottom: var(--s-4);">${colsCerradas.slice(0, 3).map(coleccionCardHTML).join('')}</div>
+      ` : '';
+      list.innerHTML = interestRow + colsHTML + emptyAfterFilter;
       renderHeaderSort('categoriaHeaderActions', 'categoria', sortKey, (sort) => {
         state.categoriaSort = sort;
         renderCategoria(cat);
@@ -2419,11 +2564,13 @@
       
       if (baseRecs.length === 0) {
         if (headerSlot) headerSlot.innerHTML = '';
-        content.innerHTML = emptyStateHTML('🤔', `${u.nombre} aún no recomienda nada`, '¡Anímalo a compartir!');
+        content.innerHTML = favoritosHTML(u, false) +
+          emptyStateHTML('🤔', `${u.nombre} aún no recomienda nada`, '¡Anímalo a compartir!');
         return;
       }
       
       content.innerHTML = `
+        ${favoritosHTML(u, false)}
         ${categoryFilterHTML(filter, 'bromendator')}
         ${recs.length
           ? `<div class="rec-list">${recs.map(recListItemHTML).join('')}</div>`
@@ -2682,6 +2829,601 @@
     }
     window.toggleInteresa = toggleInteresa;
     
+    /* ========== COLECCIONES ==========
+       Reemplazan a Repertorios. Un tema abierto ("mejores pizzas de Barcelona"),
+       una recomendación por persona, votación y ganador.
+
+       Reglas (todas derivadas, nada de estado guardado salvo el cierre):
+        - COL_MIN_RECS recomendaciones -> se abre la votación y se ve el marcador.
+        - Para votar hay que haber propuesto. No bloquea a nadie más: el que no
+          propone simplemente no vota, los demás siguen.
+        - No podés votarte a vos mismo. El voto se puede cambiar hasta el cierre.
+        - Cierra cuando votan todos los usuarios activos y hay líder único.
+        - Empate = no cierra. Alguien tiene que cambiar su voto. Es deliberado.
+        - Las cerradas aparecen también en la pantalla de su categoría. */
+    const COL_MIN_RECS = 3;
+
+    function getColeccion(id) {
+      return (state.data.colecciones || []).find(c => String(c.id) === String(id));
+    }
+    function itemsDe(coleccionId) {
+      return (state.data.coleccionItems || []).filter(i => String(i.coleccion_id) === String(coleccionId));
+    }
+    function votosDe(coleccionId) {
+      return (state.data.coleccionVotos || []).filter(v => String(v.coleccion_id) === String(coleccionId));
+    }
+    function usuariosActivos() {
+      return (state.data.usuarios || []).filter(u => String(u.activo).toUpperCase() !== 'FALSE');
+    }
+
+    /* El escrutinio se calcula en el front igual que en el backend. Mismo
+       resultado, sin esperar red: el marcador tiene que verse al instante. */
+    function escrutinio(votos) {
+      const conteo = {};
+      votos.forEach(v => {
+        const k = String(v.rec_id);
+        conteo[k] = (conteo[k] || 0) + 1;
+      });
+      let max = 0, lider = '', empate = false;
+      Object.keys(conteo).forEach(k => {
+        if (conteo[k] > max) { max = conteo[k]; lider = k; empate = false; }
+        else if (conteo[k] === max && max > 0) { empate = true; }
+      });
+      return { conteo, max, lider: empate ? '' : lider, empate };
+    }
+
+    function estadoColeccion(col) {
+      if (String(col.estado) === 'cerrada') return 'cerrada';
+      return itemsDe(col.id).length >= COL_MIN_RECS ? 'votacion' : 'abierta';
+    }
+    const ETIQUETA_ESTADO = { abierta: 'Recogiendo', votacion: 'Votando', cerrada: 'Cerrada' };
+
+    function miItemEn(coleccionId) {
+      return itemsDe(coleccionId).find(i => String(i.usuario) === String(state.currentUser));
+    }
+    function miVotoEn(coleccionId) {
+      return votosDe(coleccionId).find(v => String(v.usuario) === String(state.currentUser));
+    }
+
+    /* Puntos: una colección cerrada da 1 punto al que propuso la ganadora.
+       No se guarda en ningún sitio, se recalcula siempre. */
+    function tablaPuntos() {
+      const puntos = {};
+      usuariosActivos().forEach(u => { puntos[u.username] = 0; });
+      (state.data.colecciones || []).forEach(col => {
+        if (String(col.estado) !== 'cerrada' || !col.ganadora_rec_id) return;
+        const item = itemsDe(col.id).find(i => String(i.rec_id) === String(col.ganadora_rec_id));
+        if (item && puntos[item.usuario] !== undefined) puntos[item.usuario]++;
+      });
+      return Object.keys(puntos)
+        .map(username => ({ username, puntos: puntos[username] }))
+        .sort((a, b) => b.puntos - a.puntos || a.username.localeCompare(b.username));
+    }
+
+    /* Colecciones donde puedo actuar: me falta poner rec, o votar. Sirve para
+       el puntito del nav y para ordenar la lista por "lo que te toca". */
+    function coleccionesPendientes() {
+      if (!state.currentUser) return [];
+      return (state.data.colecciones || []).filter(col => {
+        if (String(col.estado) === 'cerrada') return false;
+        if (!miItemEn(col.id)) return true;
+        return itemsDe(col.id).length >= COL_MIN_RECS && !miVotoEn(col.id);
+      });
+    }
+
+    function textoWhatsApp(col) {
+      const est = estadoColeccion(col);
+      const url = location.origin + location.pathname + '#/coleccion/' + col.id;
+      if (est === 'cerrada') {
+        const ganadora = state.data.recomendaciones.find(r => String(r.id) === String(col.ganadora_rec_id));
+        const item = itemsDe(col.id).find(i => String(i.rec_id) === String(col.ganadora_rec_id));
+        const quien = item ? (getUserBy(item.usuario) || {}).nombre || item.usuario : '';
+        return `Ganó "${ganadora ? ganadora.titulo : '?'}"${quien ? ', de ' + quien : ''} en «${col.titulo}» 🏆\n${url}`;
+      }
+      if (est === 'votacion') {
+        return `Ya se puede votar en «${col.titulo}» 🗳️\n${url}`;
+      }
+      return `Se me ocurrió una colección: «${col.titulo}». Meté la tuya 👇\n${url}`;
+    }
+    function compartirWhatsApp(coleccionId) {
+      const col = getColeccion(coleccionId);
+      if (!col) return;
+      window.open('https://wa.me/?text=' + encodeURIComponent(textoWhatsApp(col)), '_blank');
+    }
+    window.compartirWhatsApp = compartirWhatsApp;
+
+    function waButtonHTML(coleccionId, label) {
+      return `
+        <button type="button" class="wa-btn" data-wa="${coleccionId}">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.5 14.2c-.2.6-1.2 1.2-1.7 1.2-.4 0-1 .1-3.2-.9-2.7-1.2-4.4-4-4.5-4.2-.1-.2-1-1.4-1-2.6s.6-1.8.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5c-.1.2-.3.3-.1.6.1.3.7 1.2 1.5 1.9 1 .9 1.8 1.2 2.1 1.3.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.5-.1l1.9.9c.2.1.4.2.4.3.1.2.1.7-.1 1.3z"/></svg>
+          ${escapeHTML(label)}
+        </button>
+      `;
+    }
+
+    /* ---------- LISTA DE COLECCIONES ---------- */
+    function renderColecciones() {
+      const cols = [...(state.data.colecciones || [])];
+      const content = document.getElementById('coleccionesContent');
+      const pendientes = coleccionesPendientes();
+
+      document.getElementById('coleccionesSubtitle').textContent =
+        cols.length === 0 ? 'Todavía no hay ninguna'
+        : pendientes.length ? `${pendientes.length} esperan algo tuyo`
+        : `${cols.length} colección${cols.length === 1 ? '' : 'es'}`;
+
+      const crearBtn = `
+        <button class="btn-primary" id="nuevaColeccionBtn" style="margin-bottom: var(--s-4);">
+          + Nueva colección
+        </button>
+      `;
+
+      if (!cols.length) {
+        content.innerHTML = crearBtn + emptyStateHTML('🗂️', 'Sin colecciones todavía',
+          'Proponé un tema ("pelis argentinas", "bares para hablar") y que cada uno meta la suya.');
+        document.getElementById('nuevaColeccionBtn').addEventListener('click', abrirModalNuevaColeccion);
+        return;
+      }
+
+      // Orden: primero las que esperan algo mío, después por actividad reciente.
+      const pendSet = new Set(pendientes.map(c => c.id));
+      cols.sort((a, b) => {
+        const pa = pendSet.has(a.id) ? 0 : 1, pb = pendSet.has(b.id) ? 0 : 1;
+        if (pa !== pb) return pa - pb;
+        const ca = String(a.estado) === 'cerrada' ? 1 : 0, cb = String(b.estado) === 'cerrada' ? 1 : 0;
+        if (ca !== cb) return ca - cb;
+        return new Date(b.timestamp) - new Date(a.timestamp);
+      });
+
+      const tabla = tablaPuntos().filter(p => p.puntos > 0);
+      const tablaHTML = tabla.length ? `
+        <div class="rec-card" style="padding: var(--s-4); margin-bottom: var(--s-4);">
+          <h3 style="font-family:var(--font-display); font-size:17px; margin:0 0 var(--s-2);">🏆 Colecciones ganadas</h3>
+          ${tabla.map((p, i) => {
+            const u = getUserBy(p.username);
+            return `
+              <div class="puntos-row">
+                <span class="puntos-pos">${i + 1}</span>
+                ${avatarHTML(p.username)}
+                <span class="puntos-name">${escapeHTML(u ? u.nombre : p.username)}</span>
+                <span class="puntos-n">${p.puntos}</span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      ` : '';
+
+      content.innerHTML = crearBtn + tablaHTML + `<div class="col-list">${cols.map(coleccionCardHTML).join('')}</div>`;
+      document.getElementById('nuevaColeccionBtn').addEventListener('click', abrirModalNuevaColeccion);
+    }
+
+    function coleccionCardHTML(col) {
+      const cat = CATEGORIES[col.categoria] || { nombre: col.categoria, color: 'peliculas', emoji: '⭐' };
+      const items = itemsDe(col.id);
+      const votos = votosDe(col.id);
+      const est = estadoColeccion(col);
+      const creador = getUserBy(col.creador);
+      const total = usuariosActivos().length;
+
+      let linea;
+      if (est === 'cerrada') {
+        const ganadora = state.data.recomendaciones.find(r => String(r.id) === String(col.ganadora_rec_id));
+        linea = ganadora ? `🏆 ${escapeHTML(ganadora.titulo)}` : 'Cerrada';
+      } else if (est === 'votacion') {
+        linea = `${votos.length} de ${total} votos · ${items.length} opciones`;
+      } else {
+        const faltan = COL_MIN_RECS - items.length;
+        linea = `${items.length} de ${COL_MIN_RECS} para abrir la votación`;
+      }
+
+      const meFalta = est !== 'cerrada' && (!miItemEn(col.id) || (est === 'votacion' && !miVotoEn(col.id)));
+      const pct = est === 'votacion' ? Math.round((votos.length / Math.max(total, 1)) * 100)
+                : est === 'abierta' ? Math.round((items.length / COL_MIN_RECS) * 100) : 100;
+
+      return `
+        <a href="#/coleccion/${col.id}" class="col-card ${cat.color}">
+          <div class="col-card-top">
+            <span class="badge ${cat.color}">${cat.emoji} ${escapeHTML(cat.nombre)}</span>
+            <span class="col-state ${est}">${ETIQUETA_ESTADO[est]}</span>
+            ${meFalta ? `<span class="col-state tuya">Te toca</span>` : ''}
+          </div>
+          <h3>${escapeHTML(col.titulo)}</h3>
+          <div class="col-card-meta">
+            ${avatarHTML(col.creador)}
+            <span>Por ${escapeHTML(creador ? creador.nombre : col.creador)} · ${linea}</span>
+          </div>
+          <div class="col-progress"><span style="width:${Math.min(pct, 100)}%"></span></div>
+        </a>
+      `;
+    }
+
+    function abrirModalNuevaColeccion() {
+      const cats = Object.keys(CATEGORIES);
+      showModal({
+        title: 'Nueva colección',
+        bodyHtml: `
+          <div class="form-group">
+            <label class="form-label" for="colTitulo">¿De qué va?</label>
+            <input type="text" id="colTitulo" class="form-input" placeholder="Ej: Pelis argentinas" maxlength="80">
+            <span style="display:block; font-size:11px; color:var(--ink-soft); margin-top:6px;">
+              Cada uno mete una y se vota. Con ${COL_MIN_RECS} se abre la votación.
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Categoría</label>
+            <div class="cat-pick" id="colCatPick">
+              ${cats.map(k => `
+                <button type="button" class="cat-pick-btn" data-cat="${k}" aria-pressed="false">
+                  <span class="cat-emoji">${CATEGORIES[k].emoji}</span> ${escapeHTML(CATEGORIES[k].singular)}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `,
+        secondaryLabel: 'Cancelar',
+        primaryLabel: 'Crear',
+        onSubmit: async () => {
+          const titulo = (document.getElementById('colTitulo').value || '').trim();
+          const sel = document.querySelector('#colCatPick .cat-pick-btn[aria-pressed="true"]');
+          if (!titulo) { toast('Ponele un título', 'error'); return; }
+          if (!sel) { toast('Elegí una categoría', 'error'); return; }
+          closeModal();
+          showBusy('Creando la colección…', 'Un momento');
+          try {
+            const res = await apiGet('createColeccion', {
+              titulo, categoria: sel.dataset.cat, creador: state.currentUser,
+            }, { quiet: true });
+            await loadData({ silent: true, force: true, quiet: true });
+            hideBusy();
+            location.hash = '#/coleccion/' + res.id;
+          } catch (err) {
+            hideBusy();
+            toast('Error: ' + err.message, 'error');
+          }
+        },
+      });
+      document.querySelectorAll('#colCatPick .cat-pick-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#colCatPick .cat-pick-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
+          btn.setAttribute('aria-pressed', 'true');
+        });
+      });
+    }
+
+    /* ---------- DETALLE DE UNA COLECCIÓN ---------- */
+    function renderColeccion(coleccionId) {
+      const col = getColeccion(coleccionId);
+      if (!col) { location.hash = '#/colecciones'; return; }
+
+      const cat = CATEGORIES[col.categoria] || { nombre: col.categoria, color: 'peliculas', emoji: '⭐' };
+      const items = itemsDe(col.id);
+      const votos = votosDe(col.id);
+      const est = estadoColeccion(col);
+      const esc = escrutinio(votos);
+      const total = usuariosActivos().length;
+      const mio = miItemEn(col.id);
+      const miVoto = miVotoEn(col.id);
+      const creador = getUserBy(col.creador);
+      const puedeBorrar = (String(col.creador) === String(state.currentUser) || isAdmin())
+                          && est !== 'cerrada' && votos.length === 0;
+
+      document.getElementById('coleccionTitle').textContent = col.titulo;
+      document.getElementById('coleccionMeta').textContent =
+        `${cat.nombre} · propuesta por ${creador ? creador.nombre : col.creador}`;
+
+      // El marcador solo se enseña a partir de COL_MIN_RECS votos: con 1-0 no hay
+      // nada que mirar y solo genera efecto arrastre.
+      const mostrarVotos = est === 'cerrada' || votos.length >= COL_MIN_RECS;
+
+      let banner = '';
+      if (est === 'cerrada') {
+        const ganadora = state.data.recomendaciones.find(r => String(r.id) === String(col.ganadora_rec_id));
+        const itemGan = items.find(i => String(i.rec_id) === String(col.ganadora_rec_id));
+        const quien = itemGan ? getUserBy(itemGan.usuario) : null;
+        banner = `<div class="col-banner win">🏆 Ganó <strong>${escapeHTML(ganadora ? ganadora.titulo : '?')}</strong>${quien ? `, de <strong>${escapeHTML(quien.nombre)}</strong>` : ''}.</div>`;
+      } else if (est === 'abierta') {
+        banner = `<div class="col-banner info">Faltan <strong>${COL_MIN_RECS - items.length}</strong> recomendacion${COL_MIN_RECS - items.length === 1 ? '' : 'es'} para que se abra la votación.</div>`;
+      } else if (!mio) {
+        banner = `<div class="col-banner warn">Para votar tenés que poner la tuya primero.</div>`;
+      } else if (!miVoto) {
+        banner = `<div class="col-banner warn">Ya podés votar. No vale votarse a uno mismo.</div>`;
+      } else if (esc.empate && votos.length >= total) {
+        banner = `<div class="col-banner warn"><strong>Empate.</strong> Ya votaron todos, así que no cierra hasta que alguien cambie su voto.</div>`;
+      } else if (votos.length >= total) {
+        banner = `<div class="col-banner info">Votaron todos. Cerrando…</div>`;
+      } else {
+        banner = `<div class="col-banner info">Votaste. Faltan <strong>${total - votos.length}</strong> por votar. Podés cambiar tu voto hasta que cierre.</div>`;
+      }
+
+      const opciones = items.map(item => {
+        const r = state.data.recomendaciones.find(x => String(x.id) === String(item.rec_id));
+        if (!r) return '';
+        const autor = getUserBy(item.usuario);
+        const n = esc.conteo[String(item.rec_id)] || 0;
+        const esMia = String(item.usuario) === String(state.currentUser);
+        const votada = miVoto && String(miVoto.rec_id) === String(item.rec_id);
+        const ganadora = est === 'cerrada' && String(col.ganadora_rec_id) === String(item.rec_id);
+        const puedoVotar = est === 'votacion' && mio && !esMia;
+        const img = resolveImageUrl(r.imagen_url, r);
+        const poster = isTrustedImgUrl(img)
+          ? `<img class="opt-poster" src="${escapeHTML(img)}" alt="" data-fallback="${cat.emoji}" data-fallback-class="opt-poster-ph">`
+          : `<div class="opt-poster-ph">${cat.emoji}</div>`;
+        return `
+          <div class="opt-row ${votada ? '' : ''} ${ganadora ? 'ganadora' : ''} ${esMia ? 'mia' : ''}"
+               ${puedoVotar ? `data-votar="${item.rec_id}" role="button" tabindex="0"` : ''}
+               aria-pressed="${!!votada}">
+            ${poster}
+            <div class="opt-body">
+              <div class="opt-title">${ganadora ? '<span class="opt-crown">🏆</span> ' : ''}${escapeHTML(r.titulo)}</div>
+              <div class="opt-by">
+                ${avatarHTML(item.usuario)}
+                <span>${escapeHTML(autor ? autor.nombre : item.usuario)}${esMia ? ' · la tuya' : ''}</span>
+                ${isRobflix(r) ? robflixBadgeHTML() : ''}
+              </div>
+              <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap;">
+                <a href="#/rec/${r.id}" class="btn-ghost" style="font-size:11px; padding:4px 10px;">Ver ficha</a>
+                ${votada ? `<span class="col-state tuya">Tu voto</span>` : ''}
+              </div>
+            </div>
+            ${mostrarVotos ? `<div class="opt-votes"><span class="n">${n}</span><span class="l">voto${n === 1 ? '' : 's'}</span></div>` : ''}
+          </div>
+        `;
+      }).join('');
+
+      let acciones = '';
+      if (est !== 'cerrada') {
+        acciones = `
+          <div style="display:flex; flex-direction:column; gap: var(--s-2); margin-top: var(--s-4);">
+            <button class="btn-primary" id="addRecColBtn">
+              ${mio ? '🔄 Cambiar mi recomendación' : '+ Poner mi recomendación'}
+            </button>
+            ${waButtonHTML(col.id, est === 'votacion' ? 'Avisar por WhatsApp que se vota' : 'Invitar por WhatsApp')}
+            ${puedeBorrar ? `<button class="btn-ghost" id="delColBtn" style="font-size:13px; color:var(--c-danger);">🗑️ Borrar colección</button>` : ''}
+          </div>
+        `;
+      } else {
+        acciones = `<div style="margin-top: var(--s-4);">${waButtonHTML(col.id, 'Compartir el ganador')}</div>`;
+      }
+
+      document.getElementById('coleccionContent').innerHTML = `
+        ${banner}
+        ${items.length
+          ? `<div class="opt-list">${opciones}</div>`
+          : emptyStateHTML(cat.emoji, 'Todavía no hay ninguna', 'Sé el primero en poner la tuya.')}
+        ${acciones}
+      `;
+
+      const addBtn = document.getElementById('addRecColBtn');
+      if (addBtn) addBtn.addEventListener('click', () => abrirModalPonerRec(col.id));
+      const delBtn = document.getElementById('delColBtn');
+      if (delBtn) delBtn.addEventListener('click', () => borrarColeccion(col.id));
+      document.querySelectorAll('#coleccionContent [data-wa]').forEach(b => {
+        b.addEventListener('click', () => compartirWhatsApp(b.dataset.wa));
+      });
+      document.querySelectorAll('#coleccionContent [data-votar]').forEach(row => {
+        row.addEventListener('click', (e) => {
+          if (e.target.closest('a')) return;   // "Ver ficha" no es un voto
+          votarEnColeccion(col.id, row.dataset.votar);
+        });
+      });
+
+      const headerSlot = document.getElementById('coleccionHeaderActions');
+      if (headerSlot) headerSlot.innerHTML = '';
+    }
+
+    /* Elegir qué recomendación pongo: una mía que ya exista de esa categoría,
+       o crear una nueva (que vuelve sola a la colección al terminar). */
+    function abrirModalPonerRec(coleccionId) {
+      const col = getColeccion(coleccionId);
+      if (!col) return;
+      const yaEnCol = new Set(itemsDe(coleccionId).map(i => String(i.rec_id)));
+      const mio = miItemEn(coleccionId);
+      const candidatas = state.data.recomendaciones
+        .filter(r => r.categoria === col.categoria
+                  && r.autor === state.currentUser
+                  && (!yaEnCol.has(String(r.id)) || (mio && String(mio.rec_id) === String(r.id))))
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+      showModal({
+        title: 'Tu recomendación',
+        bodyHtml: `
+          <button class="btn-primary" id="colNuevaRec" style="margin-bottom: var(--s-3);">
+            ✨ Recomendar algo nuevo
+          </button>
+          ${candidatas.length ? `
+            <p style="font-size:12px; color:var(--ink-soft); margin: var(--s-3) 0 var(--s-2);">
+              …o usar una tuya que ya esté en la app:
+            </p>
+            <div class="opt-list">
+              ${candidatas.slice(0, 30).map(r => `
+                <button type="button" class="opt-row" data-pick="${r.id}" aria-pressed="${mio && String(mio.rec_id) === String(r.id)}">
+                  <div class="opt-poster-ph">${(CATEGORIES[r.categoria] || {}).emoji || '⭐'}</div>
+                  <div class="opt-body">
+                    <div class="opt-title">${escapeHTML(r.titulo)}</div>
+                    <div class="opt-by"><span>${fmtDate(r.timestamp)}</span></div>
+                  </div>
+                </button>
+              `).join('')}
+            </div>
+          ` : `<p style="font-size:12px; color:var(--ink-soft);">No tenés recomendaciones de ${escapeHTML((CATEGORIES[col.categoria] || {}).nombre || col.categoria)} todavía.</p>`}
+        `,
+        secondaryLabel: 'Cancelar',
+      });
+
+      document.getElementById('colNuevaRec').addEventListener('click', () => {
+        closeModal();
+        // Volvemos a la colección al terminar de crear la rec.
+        state.coleccionPendiente = coleccionId;
+        state.formNew = { categoria: col.categoria, subcategoria: null };
+        location.hash = '#/recomendar';
+      });
+      document.querySelectorAll('#modalBody [data-pick]').forEach(btn => {
+        btn.addEventListener('click', () => ponerRecEnColeccion(coleccionId, btn.dataset.pick));
+      });
+    }
+
+    async function ponerRecEnColeccion(coleccionId, recId) {
+      closeModal();
+      showBusy('Guardando…', 'Un momento');
+      try {
+        await apiGet('addToColeccion', {
+          coleccionId, recId, usuario: state.currentUser,
+        }, { quiet: true });
+        await loadData({ silent: true, force: true, quiet: true });
+        hideBusy();
+        toast('Tu recomendación está en la colección 🗂️', 'success');
+        location.hash = '#/coleccion/' + coleccionId;
+        renderColeccion(coleccionId);
+      } catch (err) {
+        hideBusy();
+        toast('Error: ' + err.message, 'error');
+      }
+    }
+
+    /* Voto optimista: se pinta al instante y se sincroniza detrás. Si el backend
+       lo rechaza (p.ej. cerró mientras tanto), se revierte y se avisa. */
+    async function votarEnColeccion(coleccionId, recId) {
+      const previo = miVotoEn(coleccionId);
+      if (previo && String(previo.rec_id) === String(recId)) return;
+
+      const snapshot = [...(state.data.coleccionVotos || [])];
+      state.data.coleccionVotos = snapshot.filter(v =>
+        !(String(v.coleccion_id) === String(coleccionId) && String(v.usuario) === String(state.currentUser))
+      );
+      state.data.coleccionVotos.push({
+        id: 'tmp_' + Date.now(), coleccion_id: coleccionId, rec_id: recId,
+        usuario: state.currentUser, timestamp: new Date().toISOString(),
+      });
+      renderColeccion(coleccionId);
+
+      try {
+        const res = await apiGet('voteColeccion', {
+          coleccionId, recId, usuario: state.currentUser,
+        }, { quiet: true });
+        await loadData({ silent: true, force: true, quiet: true });
+        renderColeccion(coleccionId);
+        if (res.cerrada) toast('¡Colección cerrada! Mirá quién ganó 🏆', 'success');
+        else toast(previo ? 'Voto cambiado' : 'Voto registrado 🗳️', 'success');
+      } catch (err) {
+        state.data.coleccionVotos = snapshot;
+        renderColeccion(coleccionId);
+        toast('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function borrarColeccion(coleccionId) {
+      showModal({
+        title: '¿Borrar la colección?',
+        bodyHtml: `<p style="font-size:14px; color:var(--ink-soft);">Se borra la colección y las recomendaciones que la gente puso <strong>en ella</strong>. Las recomendaciones en sí no se tocan.</p>`,
+        secondaryLabel: 'Cancelar',
+        primaryLabel: 'Borrar',
+        onSubmit: async () => {
+          closeModal();
+          showBusy('Borrando…', 'Un momento');
+          try {
+            await apiGet('deleteColeccion', { id: coleccionId, usuario: state.currentUser }, { quiet: true });
+            await loadData({ silent: true, force: true, quiet: true });
+            hideBusy();
+            toast('Colección borrada', 'success');
+            location.hash = '#/colecciones';
+          } catch (err) {
+            hideBusy();
+            toast('Error: ' + err.message, 'error');
+          }
+        },
+      });
+    }
+
+    /* Colecciones cerradas de una categoría: se pintan en la pantalla de esa
+       categoría para que no vivan solo en su pestaña. */
+    function coleccionesDeCategoria(categoria) {
+      return (state.data.colecciones || [])
+        .filter(c => String(c.categoria) === String(categoria) && String(c.estado) === 'cerrada')
+        .sort((a, b) => new Date(b.cerrada_timestamp || b.timestamp) - new Date(a.cerrada_timestamp || a.timestamp));
+    }
+
+    /* ========== FAVORITOS DEL PERFIL ==========
+       Viven en columnas fav_* de la hoja Usuarios. Si una columna no existe
+       todavía, el backend la ignora y aquí simplemente no se pinta: se pueden
+       añadir de a poco sin romper nada. */
+    const FAVORITOS = [
+      { campo: 'fav_pelicula',  label: 'Peli favorita',    emoji: '🍿', ph: 'Ej: Pizza, birra, faso' },
+      { campo: 'fav_serie',     label: 'Serie favorita',   emoji: '📺', ph: 'Ej: Los Soprano' },
+      { campo: 'fav_actor',     label: 'Actor',            emoji: '🎭', ph: 'Ej: Ricardo Darín' },
+      { campo: 'fav_actriz',    label: 'Actriz',           emoji: '🎬', ph: 'Ej: Cecilia Roth' },
+      { campo: 'fav_artista',   label: 'Artista',          emoji: '🎤', ph: 'Ej: Spinetta' },
+      { campo: 'fav_cancion',   label: 'Canción',          emoji: '🎵', ph: 'Ej: Seguir viviendo sin tu amor' },
+      { campo: 'fav_concierto', label: 'Mejor concierto',  emoji: '🎸', ph: 'Ej: Pearl Jam, Primavera 2018' },
+      { campo: 'fav_frase',     label: 'Frase de peli',    emoji: '💬', ph: 'Ej: Que la fuerza te acompañe', wide: true },
+    ];
+
+    function tieneFavoritos(u) {
+      return FAVORITOS.some(f => String(u[f.campo] || '').trim());
+    }
+
+    function favoritosHTML(u, editable) {
+      const algo = tieneFavoritos(u);
+      if (!algo && !editable) return '';
+      const items = FAVORITOS.map(f => {
+        const v = String(u[f.campo] || '').trim();
+        if (!v && !editable) return '';
+        return `
+          <div class="fav-item ${f.wide ? 'wide' : ''}">
+            <div class="fav-label">${f.emoji} ${escapeHTML(f.label)}</div>
+            <div class="fav-value ${v ? '' : 'empty'} ${f.campo === 'fav_frase' && v ? 'fav-quote' : ''}">${v ? escapeHTML(f.campo === 'fav_frase' ? '“' + v + '”' : v) : '—'}</div>
+          </div>
+        `;
+      }).join('');
+      return `
+        <div class="rec-card" style="padding: var(--s-4); margin-bottom: var(--s-3);">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:var(--s-2); margin-bottom: var(--s-3);">
+            <h3 style="font-family:var(--font-display); font-size:17px; margin:0;">Mis cosas</h3>
+            ${editable ? `<button class="btn-ghost" id="editFavsBtn" style="font-size:12px; padding:6px 12px;">✏️ Editar</button>` : ''}
+          </div>
+          ${algo || editable ? `<div class="fav-grid">${items}</div>` : ''}
+        </div>
+      `;
+    }
+
+    function abrirModalFavoritos() {
+      const u = getUserBy(state.currentUser);
+      if (!u) return;
+      showModal({
+        title: 'Mis cosas',
+        bodyHtml: FAVORITOS.map(f => `
+          <div class="form-group">
+            <label class="form-label" for="fav_${f.campo}">${f.emoji} ${escapeHTML(f.label)}</label>
+            <input type="text" id="fav_${f.campo}" class="form-input" maxlength="200"
+                   value="${escapeHTML(String(u[f.campo] || ''))}" placeholder="${escapeHTML(f.ph)}">
+          </div>
+        `).join('') + `<p style="font-size:11px; color:var(--ink-soft); margin:0;">Dejá en blanco lo que no quieras contar.</p>`,
+        secondaryLabel: 'Cancelar',
+        primaryLabel: 'Guardar',
+        onSubmit: async () => {
+          const params = { username: state.currentUser };
+          FAVORITOS.forEach(f => {
+            const el = document.getElementById('fav_' + f.campo);
+            params[f.campo] = el ? el.value.trim() : '';
+          });
+          closeModal();
+          showBusy('Guardando…', 'Un momento');
+          try {
+            await apiGet('updateProfile', params, { quiet: true });
+            // Optimista en local para que se vea ya, y sync detrás.
+            FAVORITOS.forEach(f => { u[f.campo] = params[f.campo]; });
+            saveToCache(state.data);
+            await loadData({ silent: true, force: true, quiet: true });
+            hideBusy();
+            toast('Guardado ✨', 'success');
+            renderPerfil();
+          } catch (err) {
+            hideBusy();
+            toast('Error: ' + err.message, 'error');
+          }
+        },
+      });
+    }
+
     /* ========== RENDER: PERFIL ========== */
     function renderPerfil() {
       const u = getUserBy(state.currentUser);
@@ -2797,6 +3539,8 @@
           </div>
         </div>
         
+        ${favoritosHTML(u, true)}
+
         <div style="margin-bottom: var(--s-4); display:flex; gap: var(--s-2); flex-wrap: wrap; justify-content:center;">
           <button class="btn-ghost" onclick="logout()" style="font-size:13px;">🔄 Cambiar de usuario</button>
           <button class="btn-ghost" onclick="forceAppReset()" style="font-size:13px;">♻️ Forzar actualización</button>
@@ -2813,6 +3557,9 @@
       const headerSlot = document.getElementById('perfilHeaderActions');
       if (headerSlot) headerSlot.innerHTML = '';
       
+      const favBtn = document.getElementById('editFavsBtn');
+      if (favBtn) favBtn.addEventListener('click', abrirModalFavoritos);
+
       // Listener tabs
       content.querySelectorAll('.profile-tab').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -3281,10 +4028,20 @@
           lugar,
           dirigido_a,
         });
+        // Si veníamos de una colección, la rec entra ahí y volvemos a la colección.
+        const colPend = state.coleccionPendiente;
+        state.coleccionPendiente = null;
+        if (colPend && res.id) {
+          try {
+            await apiGet('addToColeccion', { coleccionId: colPend, recId: res.id, usuario: state.currentUser }, { quiet: true });
+          } catch (err) {
+            toast('La rec se creó, pero no entró en la colección: ' + err.message, 'error');
+          }
+        }
         toast(dirigido_a ? '¡Compartida! Avisaremos a los destinatarios 🔔' : '¡Recomendación compartida! 🎉', 'success');
         await loadData({ silent: true, force: true, quiet: true });
         hideBusy();
-        location.hash = res.id ? `#/rec/${res.id}` : '#/';
+        location.hash = colPend ? `#/coleccion/${colPend}` : (res.id ? `#/rec/${res.id}` : '#/');
       } catch (err) {
         hideBusy();
         toast('Error: ' + err.message, 'error');
