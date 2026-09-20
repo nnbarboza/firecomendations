@@ -868,6 +868,38 @@
     }
     .wa-btn svg { width: 18px; height: 18px; }
 
+    /* Selector de estado: segmentado, distinto de los chips de categoría a
+       propósito — son dos criterios que se cruzan, no una misma lista. */
+    .estado-seg {
+      display: flex; gap: 2px;
+      background: var(--gray-100);
+      border-radius: 12px; padding: 3px;
+      margin-bottom: var(--s-3);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .estado-seg::-webkit-scrollbar { display: none; }
+    .estado-seg button {
+      flex: 1 0 auto;
+      border: 0; background: transparent;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 12px; font-weight: 600;
+      color: var(--ink-soft);
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .estado-seg button[aria-pressed="true"] {
+      background: var(--surface); color: var(--ink);
+      box-shadow: var(--shadow-soft);
+    }
+    .estado-seg .n {
+      display: inline-block; margin-left: 5px;
+      font-size: 10px; font-weight: 800;
+      background: rgba(0,0,0,.07); color: inherit;
+      border-radius: 999px; padding: 1px 6px;
+    }
+
     /* Tabla de puntos */
     .puntos-row {
       display: flex; align-items: center; gap: var(--s-3);
@@ -1502,7 +1534,8 @@
         </div>
       </header>
       <div class="form-card">
-        <div class="form-group">
+        <div id="colCtxBanner" style="display:none;"></div>
+        <div class="form-group" id="catPickerGroup">
           <label class="form-label">¿Qué tipo de recomendación?</label>
           <div class="cat-picker" id="catPicker">
             <button class="cat-pick-btn" data-cat="peliculas" aria-pressed="false"><span class="cat-emoji">🎬</span> Película</button>
@@ -1706,7 +1739,7 @@
 
   <script>
     /* ========== CONFIG ========== */
-    const APP_VERSION = '0.6.0';
+    const APP_VERSION = '0.7.0';
     const API_URL = 'https://script.google.com/macros/s/AKfycbzoW8tEDotBHSg9c6e-5rbUePYQR0c3xuIf-Efh4iGIQQFWbv2nV3egIGcsjqeFh3WDew/exec';
 
     const CATEGORIES = {
@@ -2276,7 +2309,12 @@
             const username = btn.dataset.username;
             localStorage.setItem('br_user', username);
             state.currentUser = username;
-            location.hash = `#/u/${username}`;
+            // Conservar el destino: si alguien llega por un link de WhatsApp a una
+            // colección, tras elegir usuario tiene que aterrizar EN esa colección,
+            // no en el inicio. Antes el picker pisaba la ruta con #/u/<user>.
+            const destino = state.rutaPendiente || '';
+            state.rutaPendiente = null;
+            location.hash = destino ? `#/u/${username}/${destino}` : `#/u/${username}`;
             document.getElementById('userPicker').classList.remove('show');
             navigate();
           });
@@ -2297,13 +2335,13 @@
       }
       const screen = path[0] || 'home';
       const param  = path[1] || null;
-      return { user, screen, param };
+      return { user, screen, param, path };
     }
 
     /* navigate({scroll}) — scroll:false re-pinta la pantalla actual sin saltar arriba
        (lo usan los sync en background, que si no te devolvian al principio de la lista). */
     async function navigate({ scroll = true } = {}) {
-      const { user, screen: rawScreen, param } = parseRoute(location.hash);
+      const { user, screen: rawScreen, param, path } = parseRoute(location.hash);
       // Rutas muertas de Repertorios: si alguien tiene un marcador viejo, al inicio.
       if (rawScreen === 'repertorios' || rawScreen === 'repertorio') {
         // replaceState en vez de location.replace: no recarga el documento ni deja
@@ -2312,11 +2350,17 @@
         return navigate({ scroll });
       }
       const screen = rawScreen;
+      // Salir del formulario suelta el contexto de la colección: si no, la
+      // siguiente recomendación suelta entraría en ella sin que nadie lo pida.
+      if (screen !== 'recomendar') state.coleccionPendiente = null;
       if (user && getUserBy(user)) {
         state.currentUser = user;
         localStorage.setItem('br_user', user);
       }
       if (!state.currentUser) {
+        // Guardar a dónde quería ir antes de pedirle que se identifique.
+        const destino = path.join('/');
+        if (destino && destino !== 'home') state.rutaPendiente = destino;
         showUserPicker();
         return;
       }
@@ -2942,15 +2986,40 @@
     }
 
     /* ---------- LISTA DE COLECCIONES ---------- */
+    /* Dos criterios que se cruzan, con dos controles distintos a propósito:
+       - CATEGORÍA: chips, los mismos que en el resto de la app.
+       - ESTADO respecto a mí: segmentado. No es "de qué va" sino "qué me toca". */
+    const ESTADOS_COL = [
+      { key: 'all',       label: 'Todas' },
+      { key: 'recomendar',label: 'Falta mi rec' },
+      { key: 'votar',     label: 'Falta mi voto' },
+      { key: 'abiertas',  label: 'En marcha' },
+      { key: 'cerradas',  label: 'Cerradas' },
+    ];
+
+    /* Estado de una colección RESPECTO A MÍ (no es lo mismo que estadoColeccion). */
+    function filtroEstadoCol(col, key) {
+      const est = estadoColeccion(col);
+      if (key === 'cerradas')  return est === 'cerrada';
+      if (key === 'abiertas')  return est !== 'cerrada';
+      if (key === 'recomendar') return est !== 'cerrada' && !miItemEn(col.id);
+      if (key === 'votar') {
+        return est === 'votacion' && !!miItemEn(col.id) && !miVotoEn(col.id);
+      }
+      return true;
+    }
+
     function renderColecciones() {
-      const cols = [...(state.data.colecciones || [])];
+      const todas = state.data.colecciones || [];
       const content = document.getElementById('coleccionesContent');
       const pendientes = coleccionesPendientes();
+      const fCat = state.colFilterCat || 'all';
+      const fEst = state.colFilterEstado || 'all';
 
       document.getElementById('coleccionesSubtitle').textContent =
-        cols.length === 0 ? 'Todavía no hay ninguna'
+        todas.length === 0 ? 'Todavía no hay ninguna'
         : pendientes.length ? `${pendientes.length} esperan algo tuyo`
-        : `${cols.length} colección${cols.length === 1 ? '' : 'es'}`;
+        : `${todas.length} colección${todas.length === 1 ? '' : 'es'}`;
 
       const crearBtn = `
         <button class="btn-primary" id="nuevaColeccionBtn" style="margin-bottom: var(--s-4);">
@@ -2958,22 +3027,12 @@
         </button>
       `;
 
-      if (!cols.length) {
+      if (!todas.length) {
         content.innerHTML = crearBtn + emptyStateHTML('🗂️', 'Sin colecciones todavía',
           'Proponé un tema ("pelis argentinas", "bares para hablar") y que cada uno meta la suya.');
         document.getElementById('nuevaColeccionBtn').addEventListener('click', abrirModalNuevaColeccion);
         return;
       }
-
-      // Orden: primero las que esperan algo mío, después por actividad reciente.
-      const pendSet = new Set(pendientes.map(c => c.id));
-      cols.sort((a, b) => {
-        const pa = pendSet.has(a.id) ? 0 : 1, pb = pendSet.has(b.id) ? 0 : 1;
-        if (pa !== pb) return pa - pb;
-        const ca = String(a.estado) === 'cerrada' ? 1 : 0, cb = String(b.estado) === 'cerrada' ? 1 : 0;
-        if (ca !== cb) return ca - cb;
-        return new Date(b.timestamp) - new Date(a.timestamp);
-      });
 
       const tabla = tablaPuntos().filter(p => p.puntos > 0);
       const tablaHTML = tabla.length ? `
@@ -2993,8 +3052,60 @@
         </div>
       ` : '';
 
-      content.innerHTML = crearBtn + tablaHTML + `<div class="col-list">${cols.map(coleccionCardHTML).join('')}</div>`;
+      // Los contadores del segmentado se cuentan sobre la categoría ya filtrada,
+      // si no los números no cuadran con lo que se ve al cambiar de pestaña.
+      const porCat = fCat === 'all' ? todas : todas.filter(c => c.categoria === fCat);
+      const segHTML = `
+        <div class="estado-seg" id="col-estado-seg">
+          ${ESTADOS_COL.map(e => {
+            const n = porCat.filter(c => filtroEstadoCol(c, e.key)).length;
+            return `
+              <button type="button" data-estado="${e.key}" aria-pressed="${fEst === e.key}">
+                ${e.label}${n ? `<span class="n">${n}</span>` : ''}
+              </button>
+            `;
+          }).join('')}
+        </div>
+      `;
+
+      const cols = porCat.filter(c => filtroEstadoCol(c, fEst));
+
+      // Orden: primero lo que espera algo mío, después abiertas, después cerradas.
+      const pendSet = new Set(pendientes.map(c => c.id));
+      cols.sort((a, b) => {
+        const pa = pendSet.has(a.id) ? 0 : 1, pb = pendSet.has(b.id) ? 0 : 1;
+        if (pa !== pb) return pa - pb;
+        const ca = String(a.estado) === 'cerrada' ? 1 : 0, cb = String(b.estado) === 'cerrada' ? 1 : 0;
+        if (ca !== cb) return ca - cb;
+        const ta = new Date(a.cerrada_timestamp || a.timestamp);
+        const tb = new Date(b.cerrada_timestamp || b.timestamp);
+        return tb - ta;
+      });
+
+      const vacio = `<p style="text-align:center; color:var(--ink-soft); padding: var(--s-5) var(--s-3); font-size:14px;">
+        ${fEst === 'votar' ? 'No tenés ninguna votación pendiente. Bien ahí.'
+        : fEst === 'recomendar' ? 'Pusiste la tuya en todas. Crack.'
+        : 'No hay colecciones con estos filtros.'}
+      </p>`;
+
+      content.innerHTML = crearBtn + tablaHTML
+        + categoryFilterHTML(fCat, 'colecciones')
+        + segHTML
+        + (cols.length ? `<div class="col-list">${cols.map(coleccionCardHTML).join('')}</div>` : vacio);
+
       document.getElementById('nuevaColeccionBtn').addEventListener('click', abrirModalNuevaColeccion);
+      content.querySelectorAll('#colecciones-filter .cat-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.colFilterCat = btn.dataset.cat;
+          renderColecciones();
+        });
+      });
+      content.querySelectorAll('#col-estado-seg button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.colFilterEstado = btn.dataset.estado;
+          renderColecciones();
+        });
+      });
     }
 
     function coleccionCardHTML(col) {
@@ -3661,6 +3772,9 @@
     /* ========== RENDER: RECOMENDAR ========== */
     function renderRecomendar() {
       state.formNew = { categoria: null, subcategoria: null, destinatarios: [] };
+      // Si venimos de una colección, la categoría no se elige: la manda la colección.
+      // Poder elegir "serie" en una colección de pelis solo sirve para equivocarse.
+      const colCtx = state.coleccionPendiente ? getColeccion(state.coleccionPendiente) : null;
       document.querySelectorAll('#catPicker .cat-pick-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
       document.querySelectorAll('#subcatRow .subcat-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
       document.getElementById('subcatGroup').style.display = 'none';
@@ -3688,6 +3802,25 @@
       if (rb) rb.setAttribute('aria-pressed', 'false');
       const rbg = document.getElementById('robflixGroup');
       if (rbg) rbg.style.display = 'none';
+
+      const banner = document.getElementById('colCtxBanner');
+      const catGroup = document.getElementById('catPickerGroup');
+      if (colCtx) {
+        const c = CATEGORIES[colCtx.categoria] || { nombre: colCtx.categoria, emoji: '⭐' };
+        banner.style.display = 'block';
+        banner.innerHTML = `
+          <div class="col-banner info" style="display:flex; align-items:center; gap:8px; justify-content:space-between;">
+            <span>Para la colección <strong>${escapeHTML(colCtx.titulo)}</strong> · ${c.emoji} ${escapeHTML(c.nombre)}</span>
+            <a href="#/coleccion/${colCtx.id}" style="font-size:12px; white-space:nowrap;">Salir</a>
+          </div>
+        `;
+        catGroup.style.display = 'none';
+        seleccionarCategoria(colCtx.categoria);
+      } else {
+        banner.style.display = 'none';
+        banner.innerHTML = '';
+        catGroup.style.display = 'block';
+      }
 
       const rbBtn = document.getElementById('recRobflix');
       if (rbBtn && !rbBtn.dataset.bound) {
@@ -3764,29 +3897,32 @@
       });
     }
     
+    /* Elegir categoría en el formulario. Lo usan el picker (click del usuario) y
+       el arranque cuando la categoría viene impuesta por una colección. */
+    function seleccionarCategoria(cat) {
+      document.querySelectorAll('#catPicker .cat-pick-btn').forEach(b => {
+        b.setAttribute('aria-pressed', String(b.dataset.cat === cat));
+      });
+      state.formNew.categoria = cat;
+      state.formNew.subcategoria = null;
+      const hasSubcats = !!SUBCATEGORIES[cat];
+      const subcatGroup = document.getElementById('subcatGroup');
+      subcatGroup.style.display = hasSubcats ? 'block' : 'none';
+      renderSubcatRow(cat);
+      const subcatLabel = subcatGroup.querySelector('.form-label');
+      if (subcatLabel) {
+        subcatLabel.textContent = cat === 'musica' ? 'Tipo de música' :
+                                  cat === 'restauracion' ? 'Tipo de sitio' :
+                                  'Tipo';
+      }
+      updateCreadorField(cat);
+      updateExtraFields(cat, state.formNew.subcategoria);
+    }
+
     function setupForm() {
       document.querySelectorAll('#catPicker .cat-pick-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          document.querySelectorAll('#catPicker .cat-pick-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
-          btn.setAttribute('aria-pressed', 'true');
-          const cat = btn.dataset.cat;
-          state.formNew.categoria = cat;
-          state.formNew.subcategoria = null;
-          // Mostrar/ocultar subcat-row según si la categoría tiene subcategorías
-          const hasSubcats = !!SUBCATEGORIES[cat];
-          const subcatGroup = document.getElementById('subcatGroup');
-          subcatGroup.style.display = hasSubcats ? 'block' : 'none';
-          // Renderizar las subcategorías correctas
-          renderSubcatRow(cat);
-          // Etiqueta del subcat-group según categoría
-          const subcatLabel = subcatGroup.querySelector('.form-label');
-          if (subcatLabel) {
-            subcatLabel.textContent = cat === 'musica' ? 'Tipo de música' :
-                                      cat === 'restauracion' ? 'Tipo de sitio' :
-                                      'Tipo';
-          }
-          updateCreadorField(cat);
-          updateExtraFields(cat, state.formNew.subcategoria);
+          seleccionarCategoria(btn.dataset.cat);
         });
       });
       // Nota: los handlers de subcat-btn ahora se atan en renderSubcatRow porque el HTML cambia
@@ -4758,8 +4894,13 @@
       }
       setupForm();
       quitarSplash();
-      if (!state.currentUser) showUserPicker();
-      else navigate();
+      if (!state.currentUser) {
+        // Arranque en frío desde un link compartido: guardar el destino antes de
+        // pedir usuario, para no aterrizar en el inicio.
+        const destino = parseRoute(location.hash).path.join('/');
+        if (destino && destino !== 'home') state.rutaPendiente = destino;
+        showUserPicker();
+      } else navigate();
     }
 
     /* Al volver a la app: no re-pintamos dos veces como antes. Se sincroniza en

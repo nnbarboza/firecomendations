@@ -116,6 +116,37 @@ const txt = id => (d.getElementById(id) || { textContent: '' }).textContent;
   ok('c3 no pendiente (cerrada)', !pend.includes('c3'));
   ok('el punto del nav está encendido', d.getElementById('navDot').style.display === 'block');
 
+  /* ---------- filtros de colecciones ---------- */
+  ok('hay chips de categoría', !!d.getElementById('colecciones-filter'));
+  ok('hay segmentado de estado', !!d.getElementById('col-estado-seg'));
+
+  const clicSeg = k => { d.querySelector(`#col-estado-seg [data-estado="${k}"]`).dispatchEvent(new w.Event('click', { bubbles: true })); };
+  clicSeg('cerradas');
+  await espera(60);
+  let vis = txt('coleccionesContent');
+  ok('filtro Cerradas deja solo la cerrada', vis.includes('Series noventeras') && !vis.includes('Pelis de terror'), vis.slice(0, 90));
+
+  clicSeg('recomendar');
+  await espera(60);
+  vis = txt('coleccionesContent');
+  ok('Falta mi rec: c1 sí, c2 no', vis.includes('Pelis argentinas') && !vis.includes('Pelis de terror'));
+
+  clicSeg('votar');
+  await espera(60);
+  vis = txt('coleccionesContent');
+  ok('Falta mi voto: c2 sí, c1 no', vis.includes('Pelis de terror') && !vis.includes('Pelis argentinas'));
+
+  // Los dos criterios se cruzan
+  d.querySelector('#colecciones-filter [data-cat="series"]').dispatchEvent(new w.Event('click', { bubbles: true }));
+  await espera(60);
+  ok('cruzando series + falta mi voto no queda nada', txt('coleccionesContent').includes('No tenés ninguna votación pendiente'));
+  clicSeg('cerradas');
+  await espera(60);
+  ok('series + cerradas deja la de series', txt('coleccionesContent').includes('Series noventeras'));
+  d.querySelector('#colecciones-filter [data-cat="all"]').dispatchEvent(new w.Event('click', { bubbles: true }));
+  clicSeg('all');
+  await espera(60);
+
   /* ---------- detalle: abierta ---------- */
   await ir('#/coleccion/c1');
   const c1 = txt('coleccionContent');
@@ -138,6 +169,34 @@ const txt = id => (d.getElementById(id) || { textContent: '' }).textContent;
   ok('el voto se pinta al instante, sin esperar al backend', txt('coleccionContent').includes('Tu voto'));
   await espera(80);
   ok('llama a voteColeccion', w.__calls.some(u => u.includes('action=voteColeccion')));
+
+  /* ---------- recomendar desde una colección: categoría impuesta ---------- */
+  await ir('#/coleccion/c1');
+  d.getElementById('addRecColBtn').dispatchEvent(new w.Event('click', { bubbles: true }));
+  await espera(60);
+  d.getElementById('colNuevaRec').dispatchEvent(new w.Event('click', { bubbles: true }));
+  await espera(200);
+  ok('el formulario avisa de la colección', txt('colCtxBanner').includes('Pelis argentinas'), txt('colCtxBanner'));
+  ok('el selector de categoría está oculto', d.getElementById('catPickerGroup').style.display === 'none');
+  ok('la categoría queda fijada en películas',
+     d.querySelector('#catPicker .cat-pick-btn[data-cat="peliculas"]').getAttribute('aria-pressed') === 'true');
+  ok('y el check de Robflix aparece solo', d.getElementById('robflixGroup').style.display === 'block');
+  // Salir del formulario tiene que soltar el contexto de la colección.
+  await ir('#/coleccion/c1');
+  await ir('#/recomendar');
+  ok('recomendar suelto vuelve a mostrar el selector', d.getElementById('catPickerGroup').style.display === 'block');
+  ok('y sin banner de colección', d.getElementById('colCtxBanner').style.display === 'none');
+
+  /* ---------- deep link con usuario sin elegir ---------- */
+  // Simular un móvil que nunca abrió la app: sin usuario guardado.
+  w.localStorage.removeItem('br_user');
+  w.eval('state.currentUser = null');
+  await ir('#/coleccion/c3');
+  ok('sin usuario sale el selector', d.getElementById('userPicker').classList.contains('show'));
+  d.querySelector('#userGrid [data-username="nico"]').dispatchEvent(new w.Event('click', { bubbles: true }));
+  await espera(200);
+  ok('tras elegir usuario aterriza en la colección', d.getElementById('screen-coleccion').classList.contains('active'), w.location.hash);
+  ok('y es la del link', txt('coleccionTitle') === 'Series noventeras', txt('coleccionTitle'));
 
   /* ---------- colecciones dentro de la categoría ---------- */
   await ir('#/categoria/series');
